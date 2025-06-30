@@ -11,7 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AppTestRouteImport } from './routes/_app/test'
+import { Route as AppHomeRouteImport } from './routes/_app/home'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -22,32 +22,32 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppTestRoute = AppTestRouteImport.update({
-  id: '/test',
-  path: '/test',
+const AppHomeRoute = AppHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
   getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/test': typeof AppTestRoute
+  '/home': typeof AppHomeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/test': typeof AppTestRoute
+  '/home': typeof AppHomeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
-  '/_app/test': typeof AppTestRoute
+  '/_app/home': typeof AppHomeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/test'
+  fullPaths: '/' | '/home'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/test'
-  id: '__root__' | '/' | '/_app' | '/_app/test'
+  to: '/' | '/home'
+  id: '__root__' | '/' | '/_app' | '/_app/home'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -71,22 +71,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/test': {
-      id: '/_app/test'
-      path: '/test'
-      fullPath: '/test'
-      preLoaderRoute: typeof AppTestRouteImport
+    '/_app/home': {
+      id: '/_app/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof AppHomeRouteImport
       parentRoute: typeof AppRoute
     }
   }
 }
 
 interface AppRouteChildren {
-  AppTestRoute: typeof AppTestRoute
+  AppHomeRoute: typeof AppHomeRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
-  AppTestRoute: AppTestRoute,
+  AppHomeRoute: AppHomeRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

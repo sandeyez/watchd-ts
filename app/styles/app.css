@@ -1,5 +1,6 @@
-@import "tailwindcss" source("../");
+@import "tailwindcss";
 @import "tw-animate-css";
+@import "./font.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -35,6 +36,7 @@
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-secondary: var(--sidebar-secondary);
   --color-sidebar-accent: var(--sidebar-accent);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
@@ -66,10 +68,11 @@
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0.002 247.839);
+  --sidebar: oklch(1 0 0);
   --sidebar-foreground: oklch(0.13 0.028 261.692);
   --sidebar-primary: oklch(0.21 0.034 264.665);
   --sidebar-primary-foreground: oklch(0.985 0.002 247.839);
+  --sidebar-secondary: oklch(70.7% 0.022 261.325);
   --sidebar-accent: oklch(0.967 0.003 264.542);
   --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
   --sidebar-border: oklch(0.928 0.006 264.531);
@@ -83,4 +86,11 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: "InterVariable", sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
