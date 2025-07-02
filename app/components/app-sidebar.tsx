@@ -1,15 +1,5 @@
-import { ReactNode, useEffect, useState } from "react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "./ui/sidebar/sidebar";
+import { useUser } from "@clerk/tanstack-react-start";
+import { Link } from "@tanstack/react-router";
 import {
   ClapperboardIcon,
   ClockIcon,
@@ -21,7 +11,17 @@ import {
   TrophyIcon,
   TvIcon,
 } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { ReactNode } from "react";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "./ui/sidebar/sidebar";
 
 type AppSidebarProps = {};
 
@@ -88,6 +88,8 @@ const sidebarGroups: SidebarItemGroup[] = [
 ];
 
 export function AppSidebar({}: AppSidebarProps) {
+  const user = useUser();
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -131,18 +133,17 @@ export function AppSidebar({}: AppSidebarProps) {
                 </SidebarMenuItem>
               ))}
               <SidebarMenuItem>
-                <Link to="/lists">
-                  <SidebarMenuButton className="text-sidebar-secondary hover:text-sidebar-secondary active:text-sidebar-secondary">
-                    <MoreHorizontal />
-                    <span>View all lists</span>
-                  </SidebarMenuButton>
-                </Link>
+                {/* <Link to="/lists"> */}
+                <SidebarMenuButton className="text-sidebar-secondary hover:text-sidebar-secondary active:text-sidebar-secondary">
+                  <MoreHorizontal />
+                  <span>View all lists</span>
+                </SidebarMenuButton>
+                {/* </Link> */}
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroup>
         ))}
       </SidebarContent>
-      <SidebarFooter />
     </Sidebar>
   );
 }

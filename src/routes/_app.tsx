@@ -8,7 +8,7 @@ export const Route = createFileRoute("/_app")({
 
 function RouteComponent() {
   return (
-    <div className="h-screen w-screen flex max-w-screen overflow-x-clip">
+    <div className="h-screen w-screen max-w-screen flex overflow-x-clip">
       <SidebarProvider>
         <AppSidebar />
         <main className="size-full flex-1">
