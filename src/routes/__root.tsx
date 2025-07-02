@@ -1,14 +1,16 @@
 // src/routes/__root.tsx
 /// <reference types="vite/client" />
-import type { ReactNode } from "react";
+import { ClerkProvider } from "@clerk/tanstack-react-start";
 import {
-  Outlet,
   createRootRoute,
   HeadContent,
+  Outlet,
   Scripts,
 } from "@tanstack/react-router";
+import type { ReactNode } from "react";
 
 import appCss from "@/styles/app.css?url";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -36,9 +38,13 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <RootDocument>
-      <Outlet />
-    </RootDocument>
+    <ClerkProvider>
+      <QueryClientProvider client={new QueryClient()}>
+        <RootDocument>
+          <Outlet />
+        </RootDocument>
+      </QueryClientProvider>
+    </ClerkProvider>
   );
 }
 
