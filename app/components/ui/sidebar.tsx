@@ -1,10 +1,12 @@
+"use client";
+
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, VariantProps } from "class-variance-authority";
 import { PanelLeftIcon } from "lucide-react";
 
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn, tw } from "@/lib/tailwind";
+import { cn } from "@/lib/tailwind";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -22,8 +24,132 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useSidebar } from "./sidebar-context";
-import { SIDEBAR_WIDTH_MOBILE } from "./sidebar-constants";
+
+const SIDEBAR_COOKIE_NAME = "sidebar_state";
+const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
+const SIDEBAR_WIDTH = "16rem";
+const SIDEBAR_WIDTH_MOBILE = "18rem";
+const SIDEBAR_WIDTH_ICON = "3rem";
+const SIDEBAR_KEYBOARD_SHORTCUT = "b";
+
+type SidebarContextProps = {
+  state: "expanded" | "collapsed";
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  openMobile: boolean;
+  setOpenMobile: (open: boolean) => void;
+  isMobile: boolean;
+  toggleSidebar: () => void;
+};
+
+const SidebarContext = React.createContext<SidebarContextProps | null>(null);
+
+function useSidebar() {
+  const context = React.useContext(SidebarContext);
+  if (!context) {
+    throw new Error("useSidebar must be used within a SidebarProvider.");
+  }
+
+  return context;
+}
+
+function SidebarProvider({
+  defaultOpen = true,
+  open: openProp,
+  onOpenChange: setOpenProp,
+  className,
+  style,
+  children,
+  ...props
+}: React.ComponentProps<"div"> & {
+  defaultOpen?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) {
+  const isMobile = useIsMobile();
+  const [openMobile, setOpenMobile] = React.useState(false);
+
+  // This is the internal state of the sidebar.
+  // We use openProp and setOpenProp for control from outside the component.
+  const [_open, _setOpen] = React.useState(defaultOpen);
+  const open = openProp ?? _open;
+  const setOpen = React.useCallback(
+    (value: boolean | ((value: boolean) => boolean)) => {
+      const openState = typeof value === "function" ? value(open) : value;
+      if (setOpenProp) {
+        setOpenProp(openState);
+      } else {
+        _setOpen(openState);
+      }
+
+      // This sets the cookie to keep the sidebar state.
+      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+    },
+    [setOpenProp, open]
+  );
+
+  // Helper to toggle the sidebar.
+  const toggleSidebar = React.useCallback(() => {
+    return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
+  }, [isMobile, setOpen, setOpenMobile]);
+
+  // Adds a keyboard shortcut to toggle the sidebar.
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (
+        event.key === SIDEBAR_KEYBOARD_SHORTCUT &&
+        (event.metaKey || event.ctrlKey)
+      ) {
+        event.preventDefault();
+        toggleSidebar();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [toggleSidebar]);
+
+  // We add a state so that we can do data-state="expanded" or "collapsed".
+  // This makes it easier to style the sidebar with Tailwind classes.
+  const state = open ? "expanded" : "collapsed";
+
+  const contextValue = React.useMemo<SidebarContextProps>(
+    () => ({
+      state,
+      open,
+      setOpen,
+      isMobile,
+      openMobile,
+      setOpenMobile,
+      toggleSidebar,
+    }),
+    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
+  );
+
+  return (
+    <SidebarContext.Provider value={contextValue}>
+      <TooltipProvider delayDuration={0}>
+        <div
+          data-slot="sidebar-wrapper"
+          style={
+            {
+              "--sidebar-width": SIDEBAR_WIDTH,
+              "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
+              ...style,
+            } as React.CSSProperties
+          }
+          className={cn(
+            "group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full",
+            className
+          )}
+          {...props}
+        >
+          {children}
+        </div>
+      </TooltipProvider>
+    </SidebarContext.Provider>
+  );
+}
 
 function Sidebar({
   side = "left",
@@ -103,7 +229,7 @@ function Sidebar({
       <div
         data-slot="sidebar-container"
         className={cn(
-          "inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex",
+          "fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex",
           side === "left"
             ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
             : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
@@ -279,7 +405,7 @@ function SidebarGroupLabel({
       data-slot="sidebar-group-label"
       data-sidebar="group-label"
       className={cn(
-        "text-sidebar-secondary ring-sidebar-ring flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-semibold outline-hidden transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+        "text-sidebar-foreground/70 ring-sidebar-ring flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium outline-hidden transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
         "group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0",
         className
       )}
@@ -348,7 +474,7 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<"li">) {
 }
 
 const sidebarMenuButtonVariants = cva(
-  "peer/menu-button flex w-full font-semibold items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-hidden ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:size-6 [&>svg]:text-sidebar-secondary [&>svg]:shrink-0 transition-all duration-200 ease-in-out",
+  "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-hidden ring-sidebar-ring transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -357,9 +483,9 @@ const sidebarMenuButtonVariants = cva(
           "bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]",
       },
       size: {
-        default: "text-sm",
-        sm: "text-xs",
-        lg: "text-sm group-data-[collapsible=icon]:p-0!",
+        default: "h-8 text-sm",
+        sm: "h-7 text-xs",
+        lg: "h-12 text-sm group-data-[collapsible=icon]:p-0!",
       },
     },
     defaultVariants: {
@@ -592,7 +718,9 @@ export {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  SidebarProvider,
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
+  useSidebar,
 };

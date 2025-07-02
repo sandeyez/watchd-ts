@@ -17,7 +17,7 @@ import {
   SIDEBAR_WIDTH_ICON,
 } from "./sidebar-constants";
 import { TooltipProvider } from "../tooltip";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwind";
 
 type SidebarContextProps = {
   state: "expanded" | "collapsed";
