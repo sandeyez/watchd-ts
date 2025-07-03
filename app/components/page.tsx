@@ -11,7 +11,7 @@ export function Page({ children, leftElement, fullWidth = false }: PageProps) {
   const { user } = useUser();
   return (
     <div
-      className="relative md:[&>*]:px-[var(--page-padding)] [&>*]:px-[calc(var(--page-padding)/2)] h-full flex flex-col min-h-[200vh]"
+      className="relative md:[&>*]:px-[var(--page-padding)] [&>*]:px-[calc(var(--page-padding)/2)] h-full flex flex-col"
       style={
         {
           "--page-padding": "calc(var(--spacing)*8)",
