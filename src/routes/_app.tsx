@@ -11,7 +11,7 @@ function RouteComponent() {
     <div className="h-screen w-screen max-w-screen flex overflow-x-clip">
       <SidebarProvider>
         <AppSidebar />
-        <main className="size-full flex-1">
+        <main className="size-full flex-1 overflow-y-auto">
           <Outlet />
         </main>
       </SidebarProvider>

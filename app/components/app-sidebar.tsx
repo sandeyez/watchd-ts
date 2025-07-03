@@ -22,6 +22,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "./ui/sidebar/sidebar";
+import { GradientText } from "./gradient-text";
 
 type AppSidebarProps = {};
 
@@ -94,13 +95,10 @@ export function AppSidebar({}: AppSidebarProps) {
     <Sidebar>
       <SidebarHeader>
         <div className="w-fit p-2">
-          <Link
-            to="/home"
-            className="select-none whitespace-nowrap relative block h-fit w-fit"
-          >
-            <span className="text-2xl font-black bg-gradient-to-r from-sky-500 to-fuchsia-500 inline-block text-transparent bg-clip-text ">
-              watchd.
-            </span>
+          <Link to="/home" className="select-none relative h-fit w-fit">
+            <GradientText>
+              <span className="text-2xl font-black">watchd.</span>
+            </GradientText>
           </Link>
         </div>
         <SidebarMenu>

@@ -8,9 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDebounce } from "@/hooks/use-debounce";
+import { shuffleArray } from "@/lib/arrays";
 import { Noun } from "@/lib/language";
 import { cn } from "@/lib/tailwind";
 import { tmdb } from "@/lib/tmdb.server";
+import { UrlBuilderService } from "@/lib/url";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
@@ -33,7 +35,10 @@ export const searchMovies = createServerFn({
       query: data.query,
     });
 
-    return results;
+    return {
+      ...results,
+      results: results.results.sort((a, b) => b.popularity - a.popularity),
+    } satisfies typeof results;
   });
 
 export const getPopularMovies = createServerFn({
@@ -42,7 +47,7 @@ export const getPopularMovies = createServerFn({
   const popularMovies = await tmdb.movies.popular({});
 
   return {
-    popularQueries: popularMovies.results
+    popularQueries: shuffleArray(popularMovies.results)
       .slice(0, 6)
       .map(({ title }) => title.toLowerCase()),
   };
@@ -139,7 +144,7 @@ function RouteComponent() {
               <Separator className="max-w-32 my-8" />
 
               <h3>Popular queries</h3>
-              <div className="flex flex-wrap w-full @2xl:w-[min(40rem,80%)] gap-2 justify-center max-w-screen mt-1">
+              <div className="flex flex-wrap w-full @2xl:w-[min(40rem,80%)] gap-x-2 gap-y-3 justify-center max-w-screen mt-1">
                 {popularQueries.map((query) => (
                   <Link
                     search={{ q: query }}
@@ -206,11 +211,13 @@ function RouteComponent() {
               {searchResults.data.results.map(
                 ({ title, release_date, id, poster_path }) => (
                   <li key={id}>
-                    <MovieSearchResult
-                      title={title}
-                      posterPath={poster_path}
-                      releaseDate={new Date(release_date)}
-                    />
+                    <Link to={UrlBuilderService.getMoviePageUrl(id)}>
+                      <MovieSearchResult
+                        title={title}
+                        posterPath={poster_path}
+                        releaseDate={new Date(release_date)}
+                      />
+                    </Link>
                   </li>
                 )
               )}

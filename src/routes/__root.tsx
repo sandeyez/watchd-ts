@@ -38,7 +38,13 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        elements: {
+          userButtonAvatarBox: "outline-2 outline-solid outline-white",
+        },
+      }}
+    >
       <QueryClientProvider client={new QueryClient()}>
         <RootDocument>
           <Outlet />

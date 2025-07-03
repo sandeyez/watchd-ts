@@ -1,6 +1,6 @@
 import { Page } from "@/components/page";
 import { SignedIn, useUser } from "@clerk/tanstack-react-start";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_app/home")({
   component: RouteComponent,
@@ -8,6 +8,7 @@ export const Route = createFileRoute("/_app/home")({
 
 function RouteComponent() {
   const { user } = useUser();
+
   return (
     <Page>
       <h1>{user ? `Welcome back, ${user.firstName}` : "Welcome back"}</h1>
