@@ -83,8 +83,6 @@ function RouteComponent() {
     queryFn: handleSearch,
   });
 
-  console.log("Search results:", searchResults.data);
-
   async function handleSearch() {
     if (query.length < 1) {
       return null;

@@ -5,13 +5,19 @@ import { CSSProperties, PropsWithChildren, ReactNode } from "react";
 type PageProps = PropsWithChildren<{
   leftElement?: ReactNode;
   fullWidth?: boolean;
+  className?: string;
 }>;
 
-export function Page({ children, leftElement, fullWidth = false }: PageProps) {
+export function Page({
+  children,
+  leftElement,
+  fullWidth = false,
+  className,
+}: PageProps) {
   const { user } = useUser();
   return (
     <div
-      className="relative md:[&>*]:px-[var(--page-padding)] [&>*]:px-[calc(var(--page-padding)/2)] h-full flex flex-col"
+      className="relative md:*:px-[var(--page-padding)] *:px-[calc(var(--page-padding)/2)] h-full flex flex-col"
       style={
         {
           "--page-padding": "calc(var(--spacing)*8)",
@@ -39,7 +45,8 @@ export function Page({ children, leftElement, fullWidth = false }: PageProps) {
           "max-w-[var(--page-max-width)] w-full grow py-4 mx-auto",
           {
             "max-w-full mx-0": fullWidth,
-          }
+          },
+          className
         )}
       >
         {children}

@@ -8,7 +8,7 @@ export type TMDBImageSizes = {
 };
 
 type GetImageUrlProps = {
-  path: string;
+  path: string | null | undefined;
 } & (
   | {
       type: "backdrop";
@@ -36,7 +36,7 @@ const TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p";
 
 export function getImageUrl({ path, size }: GetImageUrlProps) {
   if (typeof path !== "string" || !path) {
-    console.log("No path provided for image", path);
+    return null;
   }
   return `${TMDB_IMAGE_BASE_URL}/${size}${path}`;
 }
