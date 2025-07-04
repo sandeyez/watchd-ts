@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getImageUrl } from "@/lib/tmdb-utils";
 import { Cast } from "tmdb-ts";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type CastItemProps = {
   cast: Cast;
@@ -24,12 +25,21 @@ export function CastItem({ cast }: CastItemProps) {
           <AvatarFallback>{cast.name.charAt(0)}</AvatarFallback>
         )}
       </Avatar>
-      <div className="flex flex-col">
-        <span className="">{name}</span>
-        <span className="font-light text-sm text-muted-foreground line-clamp-2">
-          {character}
-        </span>
-      </div>
+      <Tooltip delayDuration={500}>
+        <TooltipTrigger asChild>
+          <div className="flex flex-col">
+            <span className="">{name}</span>
+            <span className="font-light text-sm text-muted-foreground line-clamp-2">
+              {character}
+            </span>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent side="top">
+          <p>
+            {name} played "{character}"
+          </p>
+        </TooltipContent>
+      </Tooltip>
     </div>
   );
 }
