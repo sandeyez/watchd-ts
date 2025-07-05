@@ -87,7 +87,7 @@ function RouteComponent() {
             }
           )}
           style={{
-            height: `calc(max(calc(${metadataRect?.top ?? 0}px - 1rem),0px))`,
+            height: `calc(max(calc(${(metadataRect?.top ?? 0) + (window?.scrollY ?? 0)}px - 1rem),0px))`,
           }}
         >
           <img

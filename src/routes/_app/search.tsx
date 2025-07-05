@@ -175,8 +175,8 @@ function RouteComponent() {
               <Skeleton className="h-[calc(var(--text-2xl--line-height)*var(--text-2xl))] w-1/3 mb-4" />
               <Skeleton className="h-[1lh] text-sm w-1/2 max-w-sm mb-2" />
               <ul className="mt-4 grid xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                {new Array(20).fill(null).map(() => (
-                  <MovieSearchResultSkeleton />
+                {new Array(20).fill(null).map((_, i) => (
+                  <MovieSearchResultSkeleton key={i} />
                 ))}
               </ul>
             </div>
