@@ -103,7 +103,7 @@ export function AppSidebar({}: AppSidebarProps) {
         </div>
         <SidebarMenu>
           {mainItems.map(({ href, icon, title }) => (
-            <SidebarMenuItem>
+            <SidebarMenuItem key={title}>
               <SidebarMenuButton asChild>
                 <Link to={href}>
                   {icon}
