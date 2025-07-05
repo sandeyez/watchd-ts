@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDebounce } from "@/hooks/use-debounce";
-import { shuffleArray } from "@/lib/arrays";
 import { Noun } from "@/lib/language";
 import { cn } from "@/lib/tailwind";
 import { tmdb } from "@/lib/tmdb.server";
@@ -47,7 +46,7 @@ export const getPopularMovies = createServerFn({
   const popularMovies = await tmdb.movies.popular({});
 
   return {
-    popularQueries: shuffleArray(popularMovies.results)
+    popularQueries: popularMovies.results
       .slice(0, 6)
       .map(({ title }) => title.toLowerCase()),
   };
