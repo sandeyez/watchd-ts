@@ -5,8 +5,9 @@ import { MovieCast } from "@/components/movie/movie-cast";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { useMemo, useState } from "react";
-import { SearchIcon } from "lucide-react";
+import { ArrowLeftIcon, SearchIcon } from "lucide-react";
 import { normalizeString } from "@/lib/language";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_app/movies/$movieId/cast")({
   component: RouteComponent,
@@ -44,7 +45,17 @@ function RouteComponent() {
         });
 
   return (
-    <Page className="space-y-3">
+    <Page
+      className="space-y-3"
+      leftElement={
+        <Route.Link to={"/movies/$movieId"}>
+          <Button variant={"ghost"} className="-ml-3">
+            <ArrowLeftIcon />
+            Back to the movie
+          </Button>
+        </Route.Link>
+      }
+    >
       <h1>
         {movie.title} cast ({movie.cast.length})
       </h1>
