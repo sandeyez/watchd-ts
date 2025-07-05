@@ -14,6 +14,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NotFound } from "@/components/not-found";
 import { CountryProvider } from "@/contexts/country-context";
 import { LocalStorageConfigProvider } from "@/contexts/local-storage-context";
+import { Analytics } from "@vercel/analytics/react";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -52,6 +53,7 @@ function RootComponent() {
       <QueryClientProvider client={new QueryClient()}>
         <LocalStorageConfigProvider>
           <CountryProvider>
+            <Analytics />
             <RootDocument>
               <Outlet />
             </RootDocument>
