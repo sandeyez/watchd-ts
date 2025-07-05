@@ -1,5 +1,6 @@
 import { MovieCast } from "@/components/movie/movie-cast";
 import { MovieStat } from "@/components/movie/movie-stat";
+import { WatchProviders } from "@/components/movie/watch-providers";
 import { Page } from "@/components/page";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,21 +9,58 @@ import { dayjs } from "@/lib/dayjs";
 import { Noun } from "@/lib/language";
 import { cn } from "@/lib/tailwind";
 import { getImageUrl } from "@/lib/tmdb-utils";
+import { tmdb } from "@/lib/tmdb.server";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import {
   CalendarIcon,
   ChevronRightIcon,
   ClockIcon,
   StarIcon,
 } from "lucide-react";
+import z from "zod";
 import { routeApi } from "../movies.$movieId";
+
+const getRecommendedMovies = createServerFn({
+  method: "GET",
+})
+  .validator(
+    z.object({
+      movieId: z.number(),
+    })
+  )
+  .handler(async ({ data }) => {
+    const { movieId } = data;
+
+    const similarMovies = await tmdb.movies.recommendations(movieId);
+
+    return similarMovies;
+  });
 
 export const Route = createFileRoute("/_app/movies/$movieId/")({
   component: RouteComponent,
+  loader: async ({ params }) => {
+    const { movieId: movieIdAsString } = params;
+
+    const movieId = Number(movieIdAsString);
+    if (Number.isNaN(movieId)) {
+      throw new Error("Invalid movieId");
+    }
+
+    const [recommendedMovies] = await Promise.all([
+      getRecommendedMovies({ data: { movieId } }),
+    ]);
+
+    return {
+      recommendedMovies: recommendedMovies.results,
+    };
+  },
 });
 
 function RouteComponent() {
   const movie = routeApi.useLoaderData();
+
+  const { recommendedMovies } = Route.useLoaderData();
 
   const [metadataRef, metadataRect] = useBoundingClientRect<HTMLDivElement>();
 
@@ -39,7 +77,7 @@ function RouteComponent() {
   });
 
   return (
-    <Page className="space-y-16">
+    <Page className="space-y-12">
       {backdropImageUrl && (
         <div
           className={cn(
@@ -135,9 +173,9 @@ function RouteComponent() {
           <p className="text-muted-foreground">{movie.overview}</p>
         </section>
       </div>
-      <section>
+      <section className="space-y-3">
         <div className="w-full flex items-center justify-between py-1 bg-background sticky top-0">
-          <h2 className="">Cast ({movie.cast.length})</h2>
+          <h2>Cast ({movie.cast.length})</h2>
           <Link
             to={"/movies/$movieId/cast"}
             params={{ movieId: movie.id.toString() }}
@@ -149,6 +187,10 @@ function RouteComponent() {
           </Link>
         </div>
         <MovieCast cast={movie.cast} />
+      </section>
+      <section className="space-y-3">
+        <h2>Where to stream?</h2>
+        <WatchProviders />
       </section>
     </Page>
   );
