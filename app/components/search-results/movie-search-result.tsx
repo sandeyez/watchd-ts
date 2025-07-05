@@ -1,6 +1,6 @@
-import { getImageUrl } from "@/lib/tmdb-utils";
 import { CalendarIcon } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
+import { getImageUrl } from "@/lib/tmdb-utils";
 
 type MovieSearchResultProps = {
   title: string;
@@ -13,7 +13,7 @@ export function MovieSearchResult({
   releaseDate,
   title,
 }: MovieSearchResultProps) {
-  const releaseYear = releaseDate?.getFullYear();
+  const releaseYear = releaseDate.getFullYear();
 
   return (
     <div className="h-full flex flex-col border-border-muted-foreground/25 hover:border-muted-foreground/50 transition-colors duration-200 ease-in border border-solid rounded-md overflow-hidden bg-white ">

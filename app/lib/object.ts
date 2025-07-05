@@ -1,22 +1,22 @@
-export function pick<T extends Record<string, unknown>, K extends keyof T>(
-  obj: T,
-  keys: K[]
-): Pick<T, K> {
-  const result: Partial<T> = {};
+export function pick<
+  TObjectType extends Record<string, unknown>,
+  TKeyType extends keyof TObjectType,
+>(obj: TObjectType, keys: Array<TKeyType>): Pick<TObjectType, TKeyType> {
+  const result: Partial<TObjectType> = {};
   for (const key of keys) {
     if (key in obj) {
       result[key] = obj[key];
     }
   }
-  return result as Pick<T, K>;
+  return result as Pick<TObjectType, TKeyType>;
 }
-export function omit<T extends Record<string, unknown>, K extends keyof T>(
-  obj: T,
-  keys: K[]
-): Omit<T, K> {
-  const result: Partial<T> = { ...obj };
+export function omit<
+  TObjectType extends Record<string, unknown>,
+  TKeyType extends keyof TObjectType,
+>(obj: TObjectType, keys: Array<TKeyType>): Omit<TObjectType, TKeyType> {
+  const result: Partial<TObjectType> = { ...obj };
   for (const key of keys) {
     delete result[key];
   }
-  return result as Omit<T, K>;
+  return result as Omit<TObjectType, TKeyType>;
 }

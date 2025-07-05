@@ -3,8 +3,10 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
 import { defineConfig, globalIgnores } from "eslint/config";
+import { tanstackConfig } from "@tanstack/eslint-config";
 
 export default defineConfig([
+  ...tanstackConfig,
   {
     files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
     plugins: { js },
@@ -23,10 +25,12 @@ export default defineConfig([
     },
   },
   globalIgnores([
+    "vite.config.ts",
     "node_modules",
     "dist",
     "build",
     ".tanstack",
     "app/generated",
+    "app/components/ui",
   ]),
 ]);

@@ -1,3 +1,13 @@
+import { Link, createFileRoute } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import {
+  CalendarIcon,
+  ChevronRightIcon,
+  ClockIcon,
+  StarIcon,
+} from "lucide-react";
+import z from "zod";
+import { routeApi } from "../movies.$movieId";
 import { MovieCast } from "@/components/movie/movie-cast";
 import { MovieStat } from "@/components/movie/movie-stat";
 import { WatchProviders } from "@/components/movie/watch-providers";
@@ -10,16 +20,6 @@ import { Noun } from "@/lib/language";
 import { cn } from "@/lib/tailwind";
 import { getImageUrl } from "@/lib/tmdb-utils";
 import { tmdb } from "@/lib/tmdb.server";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
-import {
-  CalendarIcon,
-  ChevronRightIcon,
-  ClockIcon,
-  StarIcon,
-} from "lucide-react";
-import z from "zod";
-import { routeApi } from "../movies.$movieId";
 
 const getRecommendedMovies = createServerFn({
   method: "GET",

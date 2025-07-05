@@ -7,7 +7,7 @@
  * @author Sander van Werkhooven <sander@jojoschool.nl>
  * @author GPT-4.1 (OpenAI)
  */
-export function shuffleArray<T>(array: T[]): T[] {
+export function shuffleArray<T>(array: Array<T>): Array<T> {
   // Start from the end of the array and swap each element with a random earlier element
   for (let i = array.length - 1; i > 0; i--) {
     // Pick a random index from 0 to i (inclusive)

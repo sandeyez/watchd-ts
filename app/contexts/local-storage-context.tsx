@@ -1,24 +1,22 @@
 import {
-  ConfigKey,
-  ConfigObject,
-  ConfigValue,
-  getInitialConfig,
-  setConfigValue,
-} from "@/lib/local-storage";
-import {
   createContext,
-  ReactNode,
   useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from "react";
+import type { ConfigKey, ConfigObject, ConfigValue } from "@/lib/local-storage";
+import type { ReactNode } from "react";
+import { getInitialConfig, setConfigValue } from "@/lib/local-storage";
 
 type LocalStorageConfigContextValue = {
   config: ConfigObject;
-  get: <K extends ConfigKey>(key: K) => ConfigValue<K>;
-  set: <K extends ConfigKey>(key: K, value: ConfigValue<K>) => void;
+  get: <TKeyType extends ConfigKey>(key: TKeyType) => ConfigValue<TKeyType>;
+  set: <TKeyType extends ConfigKey>(
+    key: TKeyType,
+    value: ConfigValue<TKeyType>
+  ) => void;
 };
 
 const LocalStorageConfigContext = createContext<
@@ -44,12 +42,16 @@ export function LocalStorageConfigProvider({
   }, []);
 
   const get = useCallback(
-    <K extends ConfigKey>(key: K): ConfigValue<K> => config[key],
+    <TKeyType extends ConfigKey>(key: TKeyType): ConfigValue<TKeyType> =>
+      config[key],
     [config]
   );
 
   const set = useCallback(
-    <K extends ConfigKey>(key: K, value: ConfigValue<K>) => {
+    <TKeyType extends ConfigKey>(
+      key: TKeyType,
+      value: ConfigValue<TKeyType>
+    ) => {
       const newConfig = setConfigValue(key, value);
       setConfig(newConfig);
     },

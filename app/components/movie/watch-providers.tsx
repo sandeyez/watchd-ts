@@ -1,12 +1,13 @@
-import { useCountry } from "@/contexts/country-context";
-import { getImageUrl } from "@/lib/tmdb-utils";
-import { tmdb } from "@/lib/tmdb.server";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { Buy, CountryCodes, Flatrate, Rent } from "tmdb-ts";
+import { CountryCodes } from "tmdb-ts";
 import z from "zod";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import type { Buy, Flatrate, Rent } from "tmdb-ts";
+import { tmdb } from "@/lib/tmdb.server";
+import { getImageUrl } from "@/lib/tmdb-utils";
+import { useCountry } from "@/contexts/country-context";
 import { useLocalStorageSettings } from "@/hooks/use-local-storage-settings";
 import { cn } from "@/lib/tailwind";
 
@@ -32,7 +33,7 @@ const getWatchProviders = createServerFn({
       data,
     }): Promise<Array<
       {
-        type: WatchProviderType | WatchProviderType[];
+        type: WatchProviderType | Array<WatchProviderType>;
       } & (Flatrate | Buy | Rent)
     > | null> => {
       const { movieId, countryCode } = data;
@@ -52,7 +53,7 @@ const getWatchProviders = createServerFn({
             // Take all the arrays (flatrate, buy, rent)
             .filter(([, value]) => Array.isArray(value))
             .flatMap(([key, value]) =>
-              (value as (Buy | Rent | Flatrate)[]).map((provider) => ({
+              (value as Array<Buy | Rent | Flatrate>).map((provider) => ({
                 ...provider,
                 priority:
                   "display_priority" in provider
@@ -71,7 +72,7 @@ const getWatchProviders = createServerFn({
           .reduce<
             Array<
               {
-                type: WatchProviderType | WatchProviderType[];
+                type: WatchProviderType | Array<WatchProviderType>;
               } & (Flatrate | Buy | Rent)
             >
           >((acc, provider) => {

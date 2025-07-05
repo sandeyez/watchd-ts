@@ -10,7 +10,6 @@ import {
   TrophyIcon,
   TvIcon,
 } from "lucide-react";
-import { ReactNode } from "react";
 import { GradientText } from "./gradient-text";
 import {
   Sidebar,
@@ -22,6 +21,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "./ui/sidebar/sidebar";
+import type { ReactNode } from "react";
 
 type SidebarItem = {
   title: string;
@@ -31,10 +31,10 @@ type SidebarItem = {
 
 type SidebarItemGroup = {
   title: string;
-  items: SidebarItem[];
+  items: Array<SidebarItem>;
 };
 
-const mainItems: SidebarItem[] = [
+const mainItems: Array<SidebarItem> = [
   {
     title: "Home",
     href: "/home",
@@ -62,7 +62,7 @@ const mainItems: SidebarItem[] = [
   },
 ];
 
-const sidebarGroups: SidebarItemGroup[] = [
+const sidebarGroups: Array<SidebarItemGroup> = [
   {
     title: "Your library",
     items: [
@@ -115,12 +115,12 @@ export function AppSidebar() {
             <SidebarGroupLabel>Favorites</SidebarGroupLabel>
 
             <SidebarMenu>
-              {items.map(({ title, href, icon }) => (
-                <SidebarMenuItem key={title}>
+              {items.map(({ title: itemTitle, href, icon }) => (
+                <SidebarMenuItem key={itemTitle}>
                   <SidebarMenuButton asChild>
-                    <Link to={href} title={title}>
+                    <Link to={href} title={itemTitle}>
                       {icon}
-                      <span>{title}</span>
+                      <span>{itemTitle}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

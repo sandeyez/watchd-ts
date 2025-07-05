@@ -11,8 +11,8 @@ export const configSchema = {
 } as const;
 
 export type ConfigKey = keyof typeof configSchema;
-export type ConfigValue<K extends ConfigKey> = z.infer<
-  (typeof configSchema)[K]
+export type ConfigValue<TKey extends ConfigKey> = z.infer<
+  (typeof configSchema)[TKey]
 >;
 export type ConfigObject = {
   [K in ConfigKey]: ConfigValue<K>;
@@ -80,9 +80,9 @@ export function getInitialConfig(): ConfigObject {
  *
  * @void
  */
-export function setConfigValue<K extends ConfigKey>(
-  key: K,
-  value: ConfigValue<K>
+export function setConfigValue<TKey extends ConfigKey>(
+  key: TKey,
+  value: ConfigValue<TKey>
 ): ConfigObject {
   if (typeof window === "undefined") {
     throw new Error(

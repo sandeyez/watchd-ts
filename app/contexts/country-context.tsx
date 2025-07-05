@@ -1,11 +1,12 @@
 import {
   createContext,
   useContext,
-  useState,
   useEffect,
-  ReactNode,
+  useState
 } from "react";
-import { CountryCode } from "tmdb-ts";
+import type {
+  ReactNode} from "react";
+import type { CountryCode } from "tmdb-ts";
 
 /**
  * The shape of the country context value.

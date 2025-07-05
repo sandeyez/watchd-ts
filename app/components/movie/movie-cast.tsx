@@ -1,9 +1,9 @@
-import { cn } from "@/lib/tailwind";
-import { Cast } from "tmdb-ts";
 import { CastItem } from "./cast-item";
+import type { Cast } from "tmdb-ts";
+import { cn } from "@/lib/tailwind";
 
 type MovieCastProps = {
-  cast: Cast[];
+  cast: Array<Cast>;
   showAll?: boolean;
 };
 
@@ -16,9 +16,9 @@ export function MovieCast({ cast, showAll }: MovieCastProps) {
     >
       <ul className="grid grid-cols-2 @sm/cast:grid-cols-3 @lg/cast:grid-cols-4 @2xl/cast:grid-cols-5 @3xl/cast:grid-cols-6 gap-x-6 gap-y-8 *:empty:hidden">
         {showAll ? (
-          cast.map((cast) => (
-            <li key={cast.id}>
-              <CastItem cast={cast} />
+          cast.map((castItem) => (
+            <li key={castItem.id}>
+              <CastItem cast={castItem} />
             </li>
           ))
         ) : (

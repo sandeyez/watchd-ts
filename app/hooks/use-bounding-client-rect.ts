@@ -10,7 +10,7 @@ import { useCallback, useLayoutEffect, useRef, useState } from "react";
  * @author GPT-4.1 (OpenAI)
  */
 export function useBoundingClientRect<T extends HTMLElement>(
-  deps: unknown[] = []
+  deps: Array<unknown> = []
 ): [React.RefObject<T | null>, DOMRect | null] {
   const ref = useRef<T>(null);
   const [rect, setRect] = useState<DOMRect | null>(null);

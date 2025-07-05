@@ -1,26 +1,26 @@
+import type { ConfigKey, ConfigValue } from "@/lib/local-storage";
 import { useLocalStorageConfig } from "@/contexts/local-storage-context";
-import { ConfigKey, ConfigValue } from "@/lib/local-storage";
 import { pick } from "@/lib/object";
 
-type MultipleKeyReturnType<KeyType extends ConfigKey[]> = [
+type MultipleKeyReturnType<TKeyType extends Array<ConfigKey>> = [
   {
-    [K in KeyType[number]]: ConfigValue<K>;
+    [K in TKeyType[number]]: ConfigValue<K>;
   },
-  (key: KeyType[number], value: ConfigValue<KeyType[number]>) => void,
+  (key: TKeyType[number], value: ConfigValue<TKeyType[number]>) => void,
 ];
 
-type SingleKeyReturnType<KeyType extends ConfigKey> = [
-  ConfigValue<KeyType>,
-  (value: ConfigValue<KeyType>) => void,
+type SingleKeyReturnType<TKeyType extends ConfigKey> = [
+  ConfigValue<TKeyType>,
+  (value: ConfigValue<TKeyType>) => void,
 ];
 
 export function useLocalStorageSettings<
-  KeyType extends ConfigKey | ConfigKey[],
+  TKeyType extends ConfigKey | Array<ConfigKey>,
 >(
-  keyOrKeys: KeyType
-): KeyType extends ConfigKey[]
-  ? MultipleKeyReturnType<KeyType>
-  : KeyType extends ConfigKey
+  keyOrKeys: TKeyType
+): TKeyType extends Array<ConfigKey>
+  ? MultipleKeyReturnType<TKeyType>
+  : TKeyType extends ConfigKey
     ? SingleKeyReturnType<ConfigKey>
     : never {
   const { config, get, set } = useLocalStorageConfig();
@@ -34,8 +34,8 @@ export function useLocalStorageSettings<
     return [pick(config, keyOrKeys), setValues] as any;
   } else {
     const value = get(keyOrKeys);
-    const setValue = (value: ConfigValue<ConfigKey>) => {
-      set(keyOrKeys, value);
+    const setValue = (val: ConfigValue<ConfigKey>) => {
+      set(keyOrKeys, val);
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

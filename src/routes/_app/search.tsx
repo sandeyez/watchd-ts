@@ -1,3 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { SearchIcon, XIcon } from "lucide-react";
+import { useState } from "react";
+import { z } from "zod";
 import { Page } from "@/components/page";
 import {
   MovieSearchResult,
@@ -12,12 +18,6 @@ import { Noun } from "@/lib/language";
 import { cn } from "@/lib/tailwind";
 import { tmdb } from "@/lib/tmdb.server";
 import { UrlBuilderService } from "@/lib/url";
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
-import { SearchIcon, XIcon } from "lucide-react";
-import { useState } from "react";
-import { z } from "zod";
 
 export const searchMovies = createServerFn({
   method: "GET",
@@ -142,15 +142,15 @@ function RouteComponent() {
 
               <h3>Popular queries</h3>
               <div className="flex flex-wrap w-full @2xl:w-[min(40rem,80%)] gap-x-2 gap-y-3 justify-center max-w-screen mt-1">
-                {popularQueries.map((query) => (
+                {popularQueries.map((popularQuery) => (
                   <Link
-                    search={{ q: query }}
-                    key={query}
+                    search={{ q: popularQuery }}
+                    key={popularQuery}
                     to="/search"
-                    onClick={() => setQuery(query)}
+                    onClick={() => setQuery(popularQuery)}
                   >
                     <Button variant={"secondary"} className="rounded-full">
-                      {query}
+                      {popularQuery}
                     </Button>
                   </Link>
                 ))}
