@@ -1,4 +1,4 @@
-export function pick<T extends Record<string, any>, K extends keyof T>(
+export function pick<T extends Record<string, unknown>, K extends keyof T>(
   obj: T,
   keys: K[]
 ): Pick<T, K> {
@@ -10,7 +10,7 @@ export function pick<T extends Record<string, any>, K extends keyof T>(
   }
   return result as Pick<T, K>;
 }
-export function omit<T extends Record<string, any>, K extends keyof T>(
+export function omit<T extends Record<string, unknown>, K extends keyof T>(
   obj: T,
   keys: K[]
 ): Omit<T, K> {

@@ -1,5 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
-import { Movie, MovieDetails } from "tmdb-ts";
+import { ReactNode } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type MovieStatProps = {

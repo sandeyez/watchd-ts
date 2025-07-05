@@ -13,7 +13,7 @@ import { CountryCode } from "tmdb-ts";
 interface CountryContextValue {
   countryCode: CountryCode | null;
   loading: boolean;
-  error: string | null;
+  error: unknown | null;
 }
 
 /**
@@ -55,7 +55,7 @@ async function getUserCountryByIP(
 export function CountryProvider({ children }: { children: ReactNode }) {
   const [countryCode, setCountryCode] = useState<CountryCode | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<any | null>(null);
+  const [error, setError] = useState<unknown | null>(null);
 
   // Only fetch once on mount
   useEffect(() => {

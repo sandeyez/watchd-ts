@@ -1,6 +1,6 @@
 import { Page } from "@/components/page";
-import { SignedIn, useUser } from "@clerk/tanstack-react-start";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useUser } from "@clerk/tanstack-react-start";
+import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_app/home")({
   component: RouteComponent,

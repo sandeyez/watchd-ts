@@ -60,8 +60,6 @@ export const Route = createFileRoute("/_app/movies/$movieId/")({
 function RouteComponent() {
   const movie = routeApi.useLoaderData();
 
-  const { recommendedMovies } = Route.useLoaderData();
-
   const [metadataRef, metadataRect] = useBoundingClientRect<HTMLDivElement>();
 
   const backdropImageUrl = getImageUrl({

@@ -1,10 +1,5 @@
 import { tmdb } from "@/lib/tmdb.server";
-import {
-  createFileRoute,
-  getRouteApi,
-  Outlet,
-  RouteApi,
-} from "@tanstack/react-router";
+import { createFileRoute, getRouteApi, Outlet } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 

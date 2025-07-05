@@ -1,4 +1,5 @@
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/tailwind";
 import {
   ComponentProps,
   createContext,
@@ -9,15 +10,13 @@ import {
   useMemo,
   useState,
 } from "react";
+import { TooltipProvider } from "../tooltip";
 import {
   SIDEBAR_COOKIE_MAX_AGE,
   SIDEBAR_COOKIE_NAME,
   SIDEBAR_KEYBOARD_SHORTCUT,
-  SIDEBAR_WIDTH,
   SIDEBAR_WIDTH_ICON,
 } from "./sidebar-constants";
-import { TooltipProvider } from "../tooltip";
-import { cn } from "@/lib/tailwind";
 
 type SidebarContextProps = {
   state: "expanded" | "collapsed";

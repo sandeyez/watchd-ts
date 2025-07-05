@@ -1,4 +1,3 @@
-import { useUser } from "@clerk/tanstack-react-start";
 import { Link } from "@tanstack/react-router";
 import {
   ClapperboardIcon,
@@ -12,6 +11,7 @@ import {
   TvIcon,
 } from "lucide-react";
 import { ReactNode } from "react";
+import { GradientText } from "./gradient-text";
 import {
   Sidebar,
   SidebarContent,
@@ -22,9 +22,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "./ui/sidebar/sidebar";
-import { GradientText } from "./gradient-text";
-
-type AppSidebarProps = {};
 
 type SidebarItem = {
   title: string;
@@ -88,9 +85,7 @@ const sidebarGroups: SidebarItemGroup[] = [
   },
 ];
 
-export function AppSidebar({}: AppSidebarProps) {
-  const user = useUser();
-
+export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>

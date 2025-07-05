@@ -1,10 +1,8 @@
-import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, VariantProps } from "class-variance-authority";
 import { PanelLeftIcon } from "lucide-react";
+import * as React from "react";
 
-import { useIsMobile } from "@/hooks/use-mobile";
-import { cn, tw } from "@/lib/tailwind";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -19,11 +17,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useSidebar } from "./sidebar-context";
+import { cn } from "@/lib/tailwind";
 import { SIDEBAR_WIDTH_MOBILE } from "./sidebar-constants";
+import { useSidebar } from "./sidebar-context";
 
 function Sidebar({
   side = "left",

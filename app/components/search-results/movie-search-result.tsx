@@ -1,6 +1,5 @@
 import { getImageUrl } from "@/lib/tmdb-utils";
 import { CalendarIcon } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 
 type MovieSearchResultProps = {

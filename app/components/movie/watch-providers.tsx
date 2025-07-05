@@ -46,49 +46,53 @@ const getWatchProviders = createServerFn({
       }
 
       return (
-        Object.entries(countryResults)
-          .filter(([_, value]) => Array.isArray(value))
-          .flatMap(([key, value]) =>
-            (value as any[]).map((provider) => ({
-              ...provider,
-              priority:
-                "display_priority" in provider
-                  ? provider.display_priority
-                  : Infinity,
-              type: key,
-            }))
-          ) as Array<
-          {
-            priority: number;
-            type: WatchProviderType;
-          } & (Flatrate | Buy | Rent)
-        >
-      )
-        .sort((a, b) => a.priority - b.priority)
-        .reduce<
-          Array<
+        // Get all the entries from the countryResults object,
+        (
+          Object.entries(countryResults)
+            // Take all the arrays (flatrate, buy, rent)
+            .filter(([, value]) => Array.isArray(value))
+            .flatMap(([key, value]) =>
+              (value as (Buy | Rent | Flatrate)[]).map((provider) => ({
+                ...provider,
+                priority:
+                  "display_priority" in provider
+                    ? provider.display_priority
+                    : Infinity,
+                type: key,
+              }))
+            ) as Array<
             {
-              type: WatchProviderType | WatchProviderType[];
+              priority: number;
+              type: WatchProviderType;
             } & (Flatrate | Buy | Rent)
           >
-        >((acc, provider) => {
-          const providerIndex = acc.findIndex(
-            (p) => p.provider_id === provider.provider_id
-          );
+        )
+          .sort((a, b) => a.priority - b.priority)
+          .reduce<
+            Array<
+              {
+                type: WatchProviderType | WatchProviderType[];
+              } & (Flatrate | Buy | Rent)
+            >
+          >((acc, provider) => {
+            const providerIndex = acc.findIndex(
+              (p) => p.provider_id === provider.provider_id
+            );
 
-          if (providerIndex === -1) {
-            return [...acc, provider];
-          }
+            if (providerIndex === -1) {
+              return [...acc, provider];
+            }
 
-          acc[providerIndex] = {
-            ...provider,
-            type: Array.isArray(acc[providerIndex].type)
-              ? [...acc[providerIndex].type, provider.type].sort()
-              : [acc[providerIndex].type, provider.type].sort(),
-          };
+            acc[providerIndex] = {
+              ...provider,
+              type: Array.isArray(acc[providerIndex].type)
+                ? [...acc[providerIndex].type, provider.type].sort()
+                : [acc[providerIndex].type, provider.type].sort(),
+            };
 
-          return acc;
-        }, []);
+            return acc;
+          }, [])
+      );
     }
   );
 
@@ -134,7 +138,7 @@ export function WatchProviders() {
           className="w-full"
           key={defaultTab}
           onValueChange={(value) =>
-            // @ts-expect-error
+            // @ts-expect-error - value is a WatchProviderTab
             setDefaultTab(value)
           }
         >

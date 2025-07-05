@@ -1,13 +1,13 @@
-import * as React from "react";
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "lucide-react";
+import * as React from "react";
 import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker";
 
-import { cn } from "@/lib/tailwind";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/tailwind";
 
 function Calendar({
   className,
@@ -120,6 +120,7 @@ function Calendar({
         ...classNames,
       }}
       components={{
+        // eslint-disable-next-line react/prop-types
         Root: ({ className, rootRef, ...props }) => {
           return (
             <div
@@ -130,6 +131,7 @@ function Calendar({
             />
           );
         },
+        // eslint-disable-next-line react/prop-types
         Chevron: ({ className, orientation, ...props }) => {
           if (orientation === "left") {
             return (

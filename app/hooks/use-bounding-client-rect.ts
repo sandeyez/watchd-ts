@@ -30,7 +30,6 @@ export function useBoundingClientRect<T extends HTMLElement>(
       window.removeEventListener("scroll", updateRect);
       window.removeEventListener("resize", updateRect);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 
   return [ref, rect];

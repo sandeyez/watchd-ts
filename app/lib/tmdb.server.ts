@@ -21,4 +21,6 @@ function getTmdbSingleton(): TMDB {
 }
 
 export const tmdb =
-  typeof window === "undefined" ? getTmdbSingleton() : (null as any as TMDB);
+  typeof window === "undefined"
+    ? getTmdbSingleton()
+    : (null as unknown as TMDB);

@@ -2,18 +2,9 @@ import * as React from "react";
 
 import { cn } from "@/lib/tailwind";
 
-type InputProps = React.ComponentProps<"input"> & {
-  icon?: React.ReactNode;
-  iconPosition?: "left" | "right";
-};
+type InputProps = React.ComponentProps<"input">;
 
-function Input({
-  className,
-  type,
-  icon,
-  iconPosition = "left",
-  ...props
-}: InputProps) {
+function Input({ className, type, ...props }: InputProps) {
   return (
     <input
       type={type}
