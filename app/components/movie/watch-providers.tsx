@@ -127,67 +127,83 @@ export function WatchProviders() {
   );
 
   return (
-    <div className="space-y-3 @container/wp">
-      <Tabs
-        defaultValue={defaultTab}
-        className="w-full"
-        key={defaultTab}
-        onValueChange={(value) =>
-          // @ts-expect-error
-          setDefaultTab(value)
-        }
-      >
-        <TabsList className="w-full">
-          <TabsTrigger value={TABS.MY_PLATFORMS}>My platforms</TabsTrigger>
-          <TabsTrigger value={TABS.ALL_PLATFORMS}>All platforms</TabsTrigger>
-        </TabsList>
-        <TabsContent value={TABS.MY_PLATFORMS}>
-          My platforms are not yet implemented
-        </TabsContent>
-        <TabsContent value={TABS.ALL_PLATFORMS}>
-          {watchProviders.data ? (
-            <ul className="grid grid-cols-1 @xs/wp:grid-cols-2 @lg/wp:grid-cols-3 @2xl/wp:grid-cols-4 gap-4">
-              {watchProviders.data.map(
-                ({ provider_name, provider_id, logo_path, type }) => (
-                  <li
-                    className={cn(
-                      "flex items-center gap-2",
-                      watchProviders.data?.length === 1 && "col-span-full"
-                    )}
-                    key={provider_id}
-                  >
-                    <div className="size-12 rounded-sm overflow-hidden ">
-                      <img
-                        src={
-                          getImageUrl({
-                            type: "logo",
-                            size: "w154",
-                            path: logo_path,
-                          }) ?? ""
-                        }
-                      ></img>
-                    </div>
-                    <div className="flex flex-col">
-                      <span key={provider_name} className="font-semibold">
-                        {provider_name}
-                      </span>
-                      <span className="text-sm text-muted-foreground">
-                        {Array.isArray(type)
-                          ? type
-                              .map((t) => watchProviderTypeToDisplayNameMap[t])
-                              .join("/")
-                          : watchProviderTypeToDisplayNameMap[type]}
-                      </span>
-                    </div>
-                  </li>
-                )
-              )}
-            </ul>
-          ) : (
-            <span>We could not find streaming data for this movie.</span>
-          )}
-        </TabsContent>
-      </Tabs>
-    </div>
+    <>
+      <div className="space-y-3 @container/wp">
+        <Tabs
+          defaultValue={defaultTab}
+          className="w-full"
+          key={defaultTab}
+          onValueChange={(value) =>
+            // @ts-expect-error
+            setDefaultTab(value)
+          }
+        >
+          <TabsList className="w-full">
+            <TabsTrigger value={TABS.MY_PLATFORMS}>My platforms</TabsTrigger>
+            <TabsTrigger value={TABS.ALL_PLATFORMS}>All platforms</TabsTrigger>
+          </TabsList>
+          <TabsContent value={TABS.MY_PLATFORMS}>
+            My platforms are not yet implemented
+          </TabsContent>
+          <TabsContent value={TABS.ALL_PLATFORMS}>
+            {watchProviders.data ? (
+              <ul className="grid grid-cols-1 @xs/wp:grid-cols-2 @lg/wp:grid-cols-3 @2xl/wp:grid-cols-4 gap-4">
+                {watchProviders.data.map(
+                  ({ provider_name, provider_id, logo_path, type }) => (
+                    <li
+                      className={cn(
+                        "flex items-center gap-2",
+                        watchProviders.data?.length === 1 && "col-span-full"
+                      )}
+                      key={provider_id}
+                    >
+                      <div className="size-12 rounded-sm overflow-hidden ">
+                        <img
+                          src={
+                            getImageUrl({
+                              type: "logo",
+                              size: "w154",
+                              path: logo_path,
+                            }) ?? ""
+                          }
+                        ></img>
+                      </div>
+                      <div className="flex flex-col">
+                        <span key={provider_name} className="font-semibold">
+                          {provider_name}
+                        </span>
+                        <span className="text-sm text-muted-foreground">
+                          {Array.isArray(type)
+                            ? type
+                                .map(
+                                  (t) => watchProviderTypeToDisplayNameMap[t]
+                                )
+                                .join("/")
+                            : watchProviderTypeToDisplayNameMap[type]}
+                        </span>
+                      </div>
+                    </li>
+                  )
+                )}
+              </ul>
+            ) : (
+              <span>We could not find streaming data for this movie.</span>
+            )}
+          </TabsContent>
+        </Tabs>
+      </div>
+      <span className="text-xs text-muted-foreground flex items-center">
+        Powered by{" "}
+        <a
+          href="https://www.justwatch.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="ml-1"
+        >
+          <img src="/images/just-watch.svg" className="h-3" />
+        </a>
+        .
+      </span>
+    </>
   );
 }
