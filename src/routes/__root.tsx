@@ -12,6 +12,8 @@ import type { ReactNode } from "react";
 import appCss from "@/styles/app.css?url";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NotFound } from "@/components/not-found";
+import { CountryProvider } from "@/contexts/country-context";
+import { LocalStorageConfigProvider } from "@/contexts/local-storage-context";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -48,9 +50,13 @@ function RootComponent() {
       }}
     >
       <QueryClientProvider client={new QueryClient()}>
-        <RootDocument>
-          <Outlet />
-        </RootDocument>
+        <LocalStorageConfigProvider>
+          <CountryProvider>
+            <RootDocument>
+              <Outlet />
+            </RootDocument>
+          </CountryProvider>
+        </LocalStorageConfigProvider>
       </QueryClientProvider>
     </ClerkProvider>
   );
