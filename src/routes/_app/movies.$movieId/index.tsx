@@ -203,6 +203,7 @@ function RouteComponent() {
           <h2>More like this</h2>
           <ul className="flex gap-4 w-full [--poster-width:--spacing(36)] sm:[--poster-width:--spacing(44)] md:[--poster-width:--spacing(48)]">
             <HorizontalScroll
+              key={movie.id}
               gap={16}
               showDots
               scrollButtonClassName={tw`top-[calc(var(--poster-width)*var(--aspect-poster))] translate-y-1/2`}
