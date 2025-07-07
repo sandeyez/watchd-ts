@@ -1,4 +1,4 @@
-### TODO
+### TODO (in arbitrary order)
 
 - [ ] Add Clerk webhook to sync users
 - [ ] Back button functionality
@@ -10,3 +10,18 @@
 - [ ] Watchlist functionality
 - [ ] LLM integration (populate discover query based on user prompt)
 - [ ] Weekly movie recommendations
+- [ ] Landing page
+- [ ] Discover page
+- [ ] TV shows
+- [ ] TV show seasons
+- [ ] TV show episodes
+- [ ] Custom lists
+- [ ] Favorites
+- [ ] Recently watched
+- [ ] User language settings
+- [ ] Dark mode
+- [ ] User profile page
+- [ ] Following users
+- [ ] Homepage
+- [ ] User activity feed
+- [ ] User notifications
