@@ -81,11 +81,11 @@ function RouteComponent() {
           className={cn(
             "absolute -z-10 w-full overflow-clip inset-0 transition-opacity opacity-0 duration-200 ease-in",
             {
-              "opacity-100": metadataRect && metadataRect?.top > 0,
+              "opacity-100": metadataRect && metadataRect.top > 0,
             }
           )}
           style={{
-            height: `calc(max(calc(${(metadataRect?.top ?? 0) + (window?.scrollY ?? 0)}px - 1rem),0px))`,
+            height: `calc(max(calc(${(metadataRect?.top ?? 0) + (typeof window === "undefined" ? 0 : window.scrollY)}px - 1rem),0px))`,
           }}
         >
           <img
@@ -172,7 +172,7 @@ function RouteComponent() {
         </section>
       </div>
       <section className="space-y-3">
-        <div className="w-full flex items-center justify-between py-1 bg-background sticky top-0">
+        <div className="w-full flex items-center justify-between">
           <h2>Cast ({movie.cast.length})</h2>
           <Link
             to={"/movies/$movieId/cast"}
@@ -190,6 +190,10 @@ function RouteComponent() {
         <h2>Where to stream?</h2>
         <WatchProviders />
       </section>
+      <section className="space-y-3">
+        <h2>Where to stream?</h2>
+        
+        </section>
     </Page>
   );
 }
