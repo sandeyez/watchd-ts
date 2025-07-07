@@ -17,9 +17,11 @@ import { Button } from "@/components/ui/button";
 import { useBoundingClientRect } from "@/hooks/use-bounding-client-rect";
 import { dayjs } from "@/lib/dayjs";
 import { Noun } from "@/lib/language";
-import { cn } from "@/lib/tailwind";
+import { cn, tw } from "@/lib/tailwind";
 import { getImageUrl } from "@/lib/tmdb-utils";
 import { tmdb } from "@/lib/tmdb.server";
+import { MovieCard } from "@/components/movie/movie-card";
+import HorizontalScroll from "@/components/horizontal-list";
 
 const getRecommendedMovies = createServerFn({
   method: "GET",
@@ -32,9 +34,14 @@ const getRecommendedMovies = createServerFn({
   .handler(async ({ data }) => {
     const { movieId } = data;
 
-    const similarMovies = await tmdb.movies.recommendations(movieId);
+    const recommendedMovies = await tmdb.movies.recommendations(movieId);
 
-    return similarMovies;
+    return {
+      ...recommendedMovies,
+      results: recommendedMovies.results
+        .sort((a, b) => b.popularity - a.popularity)
+        .slice(0, 10),
+    };
   });
 
 export const Route = createFileRoute("/_app/movies/$movieId/")({
@@ -59,6 +66,7 @@ export const Route = createFileRoute("/_app/movies/$movieId/")({
 
 function RouteComponent() {
   const movie = routeApi.useLoaderData();
+  const { recommendedMovies } = Route.useLoaderData();
 
   const [metadataRef, metadataRect] = useBoundingClientRect<HTMLDivElement>();
 
@@ -147,7 +155,7 @@ function RouteComponent() {
           {!Number.isNaN(new Date(movie.release_date).getFullYear()) && (
             <MovieStat
               icon={<CalendarIcon />}
-              tooltipText={`Released on ${new Date(
+              tooltipText={`${new Date(movie.release_date) > new Date() ? "Releases" : "Released"} on ${new Date(
                 movie.release_date
               ).toLocaleDateString("en-EN", {
                 day: "numeric",
@@ -190,10 +198,36 @@ function RouteComponent() {
         <h2>Where to stream?</h2>
         <WatchProviders />
       </section>
-      <section className="space-y-3">
-        <h2>Where to stream?</h2>
-        
+      {recommendedMovies.length > 0 && (
+        <section className="space-y-3">
+          <h2>More like this</h2>
+          <ul className="flex gap-4 w-full [--poster-width:--spacing(36)] sm:[--poster-width:--spacing(44)] md:[--poster-width:--spacing(48)]">
+            <HorizontalScroll
+              gap={16}
+              showDots
+              scrollButtonClassName={tw`top-[calc(var(--poster-width)*var(--aspect-poster))] translate-y-1/2`}
+            >
+              {recommendedMovies.map(
+                ({ id, poster_path, title, release_date }) => (
+                  <li key={id}>
+                    <Link
+                      to="/movies/$movieId"
+                      params={{ movieId: id.toString() }}
+                    >
+                      <MovieCard
+                        posterPath={poster_path ?? null}
+                        releaseDate={new Date(release_date)}
+                        title={title}
+                        className="w-[var(--poster-width)]"
+                      />
+                    </Link>
+                  </li>
+                )
+              )}
+            </HorizontalScroll>
+          </ul>
         </section>
+      )}
     </Page>
   );
 }
