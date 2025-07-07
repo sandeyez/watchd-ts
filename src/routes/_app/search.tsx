@@ -4,18 +4,15 @@ import { createServerFn } from "@tanstack/react-start";
 import { SearchIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
+import { MovieCard, MovieCardSkeleton } from "@/components/movie/movie-card";
 import { Page } from "@/components/page";
-import {
-  MovieSearchResult,
-  MovieSearchResultSkeleton,
-} from "@/components/search-results/movie-search-result";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDebounce } from "@/hooks/use-debounce";
 import { Noun } from "@/lib/language";
-import { cn } from "@/lib/tailwind";
+import { cn, tw } from "@/lib/tailwind";
 import { tmdb } from "@/lib/tmdb.server";
 import { UrlBuilderService } from "@/lib/url";
 
@@ -63,6 +60,8 @@ export const Route = createFileRoute("/_app/search")({
     return { popularQueries };
   },
 });
+
+const gridContainerClassName = tw`mt-4 grid xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-6`;
 
 function RouteComponent() {
   const { q } = Route.useSearch();
@@ -172,11 +171,11 @@ function RouteComponent() {
         if (searchResults.isLoading || !searchResults.data) {
           return (
             <div>
-              <Skeleton className="h-[calc(var(--text-2xl--line-height)*var(--text-2xl))] w-1/3 mb-4" />
-              <Skeleton className="h-[1lh] text-sm w-1/2 max-w-sm mb-2" />
-              <ul className="mt-4 grid xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              <Skeleton className="h-[calc(1lh-var(--skeleton-margin-bottom))] text-2xl w-1/2 max-w-sm mb-1 [--skeleton-margin-bottom:--spacing(1)]" />
+              <Skeleton className="h-[1lh] w-68" />
+              <ul className={gridContainerClassName}>
                 {new Array(20).fill(null).map((_, i) => (
-                  <MovieSearchResultSkeleton key={i} />
+                  <MovieCardSkeleton key={i} />
                 ))}
               </ul>
             </div>
@@ -204,12 +203,12 @@ function RouteComponent() {
               )}{" "}
               that match your search.
             </span>
-            <ul className="mt-4 grid xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            <ul className={gridContainerClassName}>
               {searchResults.data.results.map(
                 ({ title, release_date, id, poster_path }) => (
                   <li key={id}>
                     <Link to={UrlBuilderService.getMoviePageUrl(id)}>
-                      <MovieSearchResult
+                      <MovieCard
                         title={title}
                         posterPath={poster_path}
                         releaseDate={new Date(release_date)}
