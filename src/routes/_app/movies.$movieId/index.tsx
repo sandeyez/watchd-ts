@@ -7,7 +7,9 @@ import {
   StarIcon,
 } from "lucide-react";
 import z from "zod";
-import { routeApi } from "../movies.$movieId";
+
+import HorizontalScroll from "@/components/horizontal-list";
+import { MovieCard } from "@/components/movie/movie-card";
 import { MovieCast } from "@/components/movie/movie-cast";
 import { MovieStat } from "@/components/movie/movie-stat";
 import { WatchProviders } from "@/components/movie/watch-providers";
@@ -20,8 +22,10 @@ import { Noun } from "@/lib/language";
 import { cn, tw } from "@/lib/tailwind";
 import { getImageUrl } from "@/lib/tmdb-utils";
 import { tmdb } from "@/lib/tmdb.server";
-import { MovieCard } from "@/components/movie/movie-card";
-import HorizontalScroll from "@/components/horizontal-list";
+
+import { routeApi } from "../movies.$movieId";
+
+import type { CSSProperties } from "react";
 
 const getRecommendedMovies = createServerFn({
   method: "GET",
@@ -87,14 +91,16 @@ function RouteComponent() {
       {backdropImageUrl && (
         <div
           className={cn(
-            "absolute -z-10 w-full overflow-clip inset-0 transition-opacity opacity-0 duration-200 ease-in",
+            "absolute -z-10 w-full overflow-clip inset-0 transition-opacity opacity-0 duration-200 ease-in h-[22rem] md:h-[max(calc(var(--title-top)-1rem),0px)]",
             {
               "opacity-100": metadataRect && metadataRect.top > 0,
             }
           )}
-          style={{
-            height: `calc(max(calc(${(metadataRect?.top ?? 0) + (typeof window === "undefined" ? 0 : window.scrollY)}px - 1rem),0px))`,
-          }}
+          style={
+            {
+              "--title-top": `calc(${(metadataRect?.top ?? 0) + (typeof window === "undefined" ? 0 : window.scrollY)}px)`,
+            } as CSSProperties
+          }
         >
           <img
             src={backdropImageUrl}
@@ -105,8 +111,8 @@ function RouteComponent() {
       )}
       <div
         className={cn(
-          "grid grid-cols-[auto_1fr_auto] gap-x-6 gap-y-8",
-          backdropImageUrl && "mt-48"
+          "grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-x-4 gap-y-6 md:gap-y-8 md:gap-x-6",
+          backdropImageUrl && "mt-16 sm:mt-48"
         )}
       >
         <div className="aspect-poster row-span-full w-48 rounded-lg overflow-hidden outline-4 outline-b-0 outline-white outline-solid">

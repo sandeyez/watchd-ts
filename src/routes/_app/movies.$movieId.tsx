@@ -1,6 +1,7 @@
 import { Outlet, createFileRoute, getRouteApi } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+
 import { tmdb } from "@/lib/tmdb.server";
 
 export const getMovieDetails = createServerFn({

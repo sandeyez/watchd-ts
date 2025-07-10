@@ -1,13 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { z } from "zod";
-import { useMemo, useState } from "react";
 import { ArrowLeftIcon, SearchIcon } from "lucide-react";
-import { routeApi } from "../movies.$movieId";
+import { useMemo, useState } from "react";
+import { z } from "zod";
+
+
 import { MovieCast } from "@/components/movie/movie-cast";
-import { Input } from "@/components/ui/input";
 import { Page } from "@/components/page";
-import { normalizeString } from "@/lib/language";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { normalizeString } from "@/lib/language";
+
+import { routeApi } from "../movies.$movieId";
 
 export const Route = createFileRoute("/_app/movies/$movieId/cast")({
   component: RouteComponent,

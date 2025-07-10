@@ -1,5 +1,5 @@
-import type { ConfigKey, ConfigValue } from "@/lib/local-storage";
 import { useLocalStorageConfig } from "@/contexts/local-storage-context";
+import type { ConfigKey, ConfigValue } from "@/lib/local-storage";
 import { pick } from "@/lib/object";
 
 type MultipleKeyReturnType<TKeyType extends Array<ConfigKey>> = [

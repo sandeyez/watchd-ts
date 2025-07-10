@@ -3,13 +3,16 @@ import { useParams } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { CountryCodes } from "tmdb-ts";
 import z from "zod";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import type { Buy, Flatrate, Rent } from "tmdb-ts";
-import { tmdb } from "@/lib/tmdb.server";
-import { getImageUrl } from "@/lib/tmdb-utils";
+
 import { useCountry } from "@/contexts/country-context";
 import { useLocalStorageSettings } from "@/hooks/use-local-storage-settings";
 import { cn } from "@/lib/tailwind";
+import { getImageUrl } from "@/lib/tmdb-utils";
+import { tmdb } from "@/lib/tmdb.server";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+
+import type { Buy, Flatrate, Rent } from "tmdb-ts";
 
 type WatchProviderType = "flatrate" | "rent" | "buy";
 

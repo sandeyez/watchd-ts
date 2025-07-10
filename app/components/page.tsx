@@ -1,6 +1,8 @@
 import { SignInButton, UserButton, useUser } from "@clerk/tanstack-react-start";
-import type { CSSProperties, PropsWithChildren, ReactNode } from "react";
+
 import { cn } from "@/lib/tailwind";
+
+import type { CSSProperties, PropsWithChildren, ReactNode } from "react";
 
 type PageProps = PropsWithChildren<{
   leftElement?: ReactNode;

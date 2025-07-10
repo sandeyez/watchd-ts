@@ -1,4 +1,5 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+
 import type { ReactNode } from "react";
 
 type MovieStatProps = {

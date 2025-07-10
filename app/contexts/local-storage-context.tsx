@@ -6,9 +6,11 @@ import {
   useMemo,
   useState,
 } from "react";
+
 import type { ConfigKey, ConfigObject, ConfigValue } from "@/lib/local-storage";
-import type { ReactNode } from "react";
 import { getInitialConfig, setConfigValue } from "@/lib/local-storage";
+
+import type { ReactNode } from "react";
 
 type LocalStorageConfigContextValue = {
   config: ConfigObject;

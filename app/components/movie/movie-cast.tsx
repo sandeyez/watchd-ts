@@ -1,6 +1,8 @@
-import { CastItem } from "./cast-item";
-import type { Cast } from "tmdb-ts";
 import { cn } from "@/lib/tailwind";
+
+import { CastItem } from "./cast-item";
+
+import type { Cast } from "tmdb-ts";
 
 type MovieCastProps = {
   cast: Array<Cast>;

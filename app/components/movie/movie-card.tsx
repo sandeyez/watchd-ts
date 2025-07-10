@@ -1,6 +1,7 @@
-import { Skeleton } from "../ui/skeleton";
 import { cn } from "@/lib/tailwind";
 import { getImageUrl } from "@/lib/tmdb-utils";
+
+import { Skeleton } from "../ui/skeleton";
 
 type MovieCardProps = {
   posterPath: string | null;

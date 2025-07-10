@@ -10,6 +10,7 @@ import {
   TrophyIcon,
   TvIcon,
 } from "lucide-react";
+
 import { GradientText } from "./gradient-text";
 import {
   Sidebar,
@@ -21,6 +22,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "./ui/sidebar/sidebar";
+
 import type { ReactNode } from "react";
 
 type SidebarItem = {

@@ -1,20 +1,22 @@
 // src/routes/__root.tsx
 /// <reference types="vite/client" />
 import { ClerkProvider } from "@clerk/tanstack-react-start";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   HeadContent,
   Outlet,
   Scripts,
   createRootRoute,
 } from "@tanstack/react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Analytics } from "@vercel/analytics/react";
-import type { ReactNode } from "react";
 
-import appCss from "@/styles/app.css?url";
+
 import { NotFound } from "@/components/not-found";
 import { CountryProvider } from "@/contexts/country-context";
 import { LocalStorageConfigProvider } from "@/contexts/local-storage-context";
+import appCss from "@/styles/app.css?url";
+
+import type { ReactNode } from "react";
 
 export const Route = createRootRoute({
   head: () => ({

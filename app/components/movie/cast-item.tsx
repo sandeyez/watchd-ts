@@ -1,7 +1,9 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import type { Cast } from "tmdb-ts";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getImageUrl } from "@/lib/tmdb-utils";
+
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+
+import type { Cast } from "tmdb-ts";
 
 type CastItemProps = {
   cast: Cast;

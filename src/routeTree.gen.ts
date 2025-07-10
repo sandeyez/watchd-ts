@@ -8,6 +8,8 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createServerRootRoute } from '@tanstack/react-start/server'
+
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
@@ -17,6 +19,9 @@ import { Route as AppHomeRouteImport } from './routes/_app/home'
 import { Route as AppMoviesMovieIdRouteImport } from './routes/_app/movies.$movieId'
 import { Route as AppMoviesMovieIdIndexRouteImport } from './routes/_app/movies.$movieId/index'
 import { Route as AppMoviesMovieIdCastRouteImport } from './routes/_app/movies.$movieId/cast'
+import { ServerRoute as WebhooksClerkHandleEventsServerRouteImport } from './routes/webhooks/clerk/handle-events'
+
+const rootServerRouteImport = createServerRootRoute()
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -57,6 +62,12 @@ const AppMoviesMovieIdCastRoute = AppMoviesMovieIdCastRouteImport.update({
   path: '/cast',
   getParentRoute: () => AppMoviesMovieIdRoute,
 } as any)
+const WebhooksClerkHandleEventsServerRoute =
+  WebhooksClerkHandleEventsServerRouteImport.update({
+    id: '/webhooks/clerk/handle-events',
+    path: '/webhooks/clerk/handle-events',
+    getParentRoute: () => rootServerRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -121,6 +132,27 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   SignUpSplatRoute: typeof SignUpSplatRoute
 }
+export interface FileServerRoutesByFullPath {
+  '/webhooks/clerk/handle-events': typeof WebhooksClerkHandleEventsServerRoute
+}
+export interface FileServerRoutesByTo {
+  '/webhooks/clerk/handle-events': typeof WebhooksClerkHandleEventsServerRoute
+}
+export interface FileServerRoutesById {
+  __root__: typeof rootServerRouteImport
+  '/webhooks/clerk/handle-events': typeof WebhooksClerkHandleEventsServerRoute
+}
+export interface FileServerRouteTypes {
+  fileServerRoutesByFullPath: FileServerRoutesByFullPath
+  fullPaths: '/webhooks/clerk/handle-events'
+  fileServerRoutesByTo: FileServerRoutesByTo
+  to: '/webhooks/clerk/handle-events'
+  id: '__root__' | '/webhooks/clerk/handle-events'
+  fileServerRoutesById: FileServerRoutesById
+}
+export interface RootServerRouteChildren {
+  WebhooksClerkHandleEventsServerRoute: typeof WebhooksClerkHandleEventsServerRoute
+}
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
@@ -182,6 +214,17 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+declare module '@tanstack/react-start/server' {
+  interface ServerFileRoutesByPath {
+    '/webhooks/clerk/handle-events': {
+      id: '/webhooks/clerk/handle-events'
+      path: '/webhooks/clerk/handle-events'
+      fullPath: '/webhooks/clerk/handle-events'
+      preLoaderRoute: typeof WebhooksClerkHandleEventsServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
+  }
+}
 
 interface AppMoviesMovieIdRouteChildren {
   AppMoviesMovieIdCastRoute: typeof AppMoviesMovieIdCastRoute
@@ -218,3 +261,9 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+const rootServerRouteChildren: RootServerRouteChildren = {
+  WebhooksClerkHandleEventsServerRoute: WebhooksClerkHandleEventsServerRoute,
+}
+export const serverRouteTree = rootServerRouteImport
+  ._addFileChildren(rootServerRouteChildren)
+  ._addFileTypes<FileServerRouteTypes>()

@@ -4,6 +4,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { SearchIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
+
 import { MovieCard, MovieCardSkeleton } from "@/components/movie/movie-card";
 import { Page } from "@/components/page";
 import { Button } from "@/components/ui/button";
