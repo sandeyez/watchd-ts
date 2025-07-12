@@ -206,13 +206,14 @@ function RouteComponent() {
             </span>
             <ul className={gridContainerClassName}>
               {searchResults.data.results.map(
-                ({ title, release_date, id, poster_path }) => (
+                ({ title, release_date, id, poster_path, vote_average }) => (
                   <li key={id}>
                     <Link to={UrlBuilderService.getMoviePageUrl(id)}>
                       <MovieCard
                         title={title}
                         posterPath={poster_path}
                         releaseDate={new Date(release_date)}
+                        voteAverage={vote_average}
                       />
                     </Link>
                   </li>

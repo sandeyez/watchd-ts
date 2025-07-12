@@ -9,11 +9,11 @@ import {
 import z from "zod";
 
 import HorizontalScroll from "@/components/horizontal-list";
+import { FixedMovieHeader } from "@/components/movie/fixed-movie-header";
 import { MovieCard } from "@/components/movie/movie-card";
 import { MovieCast } from "@/components/movie/movie-cast";
 import { MovieStat } from "@/components/movie/movie-stat";
 import { WatchProviders } from "@/components/movie/watch-providers";
-import { FixedMovieHeader } from "@/components/movie/fixed-movie-header";
 import { Page } from "@/components/page";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,9 +26,9 @@ import { tmdb } from "@/lib/tmdb.server";
 
 import { routeApi } from "../movies.$movieId";
 
+import { MovieCrewMember } from "@/components/movie/movie-crew-member";
 import type { CSSProperties } from "react";
 import { useRef } from "react";
-import { MovieCrewMember } from "@/components/movie/movie-crew-member";
 
 const getRecommendedMovies = createServerFn({
   method: "GET",
@@ -91,7 +91,6 @@ function RouteComponent() {
   });
 
   const director = movie.crew.find(({ job }) => job === "Director");
-  const editor = movie.crew.find(({ job }) => job === "Editor");
 
   return (
     <>
@@ -124,7 +123,7 @@ function RouteComponent() {
         )}
         <div
           className={cn(
-            "grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-x-4 gap-y-6 md:gap-x-6",
+            "grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-x-4 gap-y-6 md:gap-x-6",
             backdropImageUrl && "mt-16 sm:mt-48"
           )}
         >
@@ -137,7 +136,7 @@ function RouteComponent() {
             )}
           </div>
           <div
-            className="flex flex-col mt-auto gap-y-2 h-fit col-span-2"
+            className="flex flex-col mt-auto gap-y-2 h-fit"
             ref={metadataRef}
           >
             <h1 className="" ref={titleRef}>
@@ -154,8 +153,8 @@ function RouteComponent() {
               ))}
             </div>
           </div>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between text-muted-foreground text-xs h-fit">
+          <div className="space-y-3 text-muted-foreground">
+            <div className="flex items-center justify-between  text-xs h-fit">
               {movie.vote_count > 0 && (
                 <MovieStat
                   icon={<StarIcon />}
@@ -200,11 +199,8 @@ function RouteComponent() {
             {director && (
               <MovieCrewMember name={director.name} heading="Directed by" />
             )}
-            {editor && (
-              <MovieCrewMember name={editor.name} heading="Edited by" />
-            )}
           </div>
-          <section className="col-span-2">
+          <section>
             <p className="text-muted-foreground">{movie.overview}</p>
           </section>
         </div>
@@ -238,7 +234,7 @@ function RouteComponent() {
                 scrollButtonClassName={tw`top-[calc(var(--poster-width)*var(--aspect-poster))] translate-y-1/2`}
               >
                 {recommendedMovies.map(
-                  ({ id, poster_path, title, release_date }) => (
+                  ({ id, poster_path, title, release_date, vote_average }) => (
                     <li key={id}>
                       <Link
                         to="/movies/$movieId"
@@ -248,6 +244,7 @@ function RouteComponent() {
                           posterPath={poster_path ?? null}
                           releaseDate={new Date(release_date)}
                           title={title}
+                          voteAverage={vote_average}
                           className="w-[var(--poster-width)]"
                         />
                       </Link>
