@@ -45,6 +45,9 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
+  --color-main-blue: var(--color-sky-500);
+  --color-main-pink: var(--color-fuchsia-500);
+
   /* Aspect ratii */
   --aspect-poster: 0.66; /* 2:3 aspect ratio */
 
