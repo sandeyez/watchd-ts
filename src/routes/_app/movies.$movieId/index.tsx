@@ -28,6 +28,7 @@ import { routeApi } from "../movies.$movieId";
 
 import type { CSSProperties } from "react";
 import { useRef } from "react";
+import { MovieCrewMember } from "@/components/movie/movie-crew-member";
 
 const getRecommendedMovies = createServerFn({
   method: "GET",
@@ -197,24 +198,10 @@ function RouteComponent() {
               )}
             </div>
             {director && (
-              <div className="flex flex-col">
-                <span className="text-sm font-bold text-muted-foreground">
-                  Directed by
-                </span>
-                <span className="text-sm font-light text-muted-foreground">
-                  {director.name}
-                </span>
-              </div>
+              <MovieCrewMember name={director.name} heading="Directed by" />
             )}
             {editor && (
-              <div className="flex flex-col">
-                <span className="text-sm font-bold text-muted-foreground">
-                  Edited by
-                </span>
-                <span className="text-sm font-light text-muted-foreground">
-                  {editor.name}
-                </span>
-              </div>
+              <MovieCrewMember name={editor.name} heading="Edited by" />
             )}
           </div>
           <section className="col-span-2">
