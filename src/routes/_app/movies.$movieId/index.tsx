@@ -89,6 +89,9 @@ function RouteComponent() {
     path: movie.poster_path,
   });
 
+  const director = movie.crew.find(({ job }) => job === "Director");
+  const editor = movie.crew.find(({ job }) => job === "Editor");
+
   return (
     <>
       <Page
@@ -120,7 +123,7 @@ function RouteComponent() {
         )}
         <div
           className={cn(
-            "grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-x-4 gap-y-6 md:gap-y-8 md:gap-x-6",
+            "grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-x-4 gap-y-6 md:gap-x-6",
             backdropImageUrl && "mt-16 sm:mt-48"
           )}
         >
@@ -150,46 +153,68 @@ function RouteComponent() {
               ))}
             </div>
           </div>
-          <div className="flex items-center justify-between text-muted-foreground text-xs h-fit">
-            {movie.vote_count > 0 && (
-              <MovieStat
-                icon={<StarIcon />}
-                tooltipText={`${Intl.NumberFormat("en-EN", {
-                  compactDisplay: "long",
-                }).format(
-                  movie.vote_count
-                )} ${new Noun("check-in", "check-ins").toString(movie.vote_count, false)} with an average rating of ${
-                  Math.round(movie.vote_average * 10) / 10
-                } / 10`}
-              >
-                {
-                  // Round the vote average to 1 decimal place
-                  Math.round(movie.vote_average * 10) / 10
-                }
-                /10
-              </MovieStat>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between text-muted-foreground text-xs h-fit">
+              {movie.vote_count > 0 && (
+                <MovieStat
+                  icon={<StarIcon />}
+                  tooltipText={`${Intl.NumberFormat("en-EN", {
+                    compactDisplay: "long",
+                  }).format(
+                    movie.vote_count
+                  )} ${new Noun("check-in", "check-ins").toString(movie.vote_count, false)} with an average rating of ${
+                    Math.round(movie.vote_average * 10) / 10
+                  } / 10`}
+                >
+                  {
+                    // Round the vote average to 1 decimal place
+                    Math.round(movie.vote_average * 10) / 10
+                  }
+                  /10
+                </MovieStat>
+              )}
+              {!Number.isNaN(new Date(movie.release_date).getFullYear()) && (
+                <MovieStat
+                  icon={<CalendarIcon />}
+                  tooltipText={`${new Date(movie.release_date) > new Date() ? "Releases" : "Released"} on ${new Date(
+                    movie.release_date
+                  ).toLocaleDateString("en-EN", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}`}
+                >
+                  {new Date(movie.release_date).getFullYear()}
+                </MovieStat>
+              )}
+              {movie.runtime > 0 && (
+                <MovieStat
+                  icon={<ClockIcon />}
+                  tooltipText={`Total runtime of ${dayjs.duration(movie.runtime, "minutes").format("H[h]m[m]")}`}
+                >
+                  {movie.runtime}min
+                </MovieStat>
+              )}
+            </div>
+            {director && (
+              <div className="flex flex-col">
+                <span className="text-sm font-bold text-muted-foreground">
+                  Directed by
+                </span>
+                <span className="text-sm font-light text-muted-foreground">
+                  {director.name}
+                </span>
+              </div>
             )}
-            {!Number.isNaN(new Date(movie.release_date).getFullYear()) && (
-              <MovieStat
-                icon={<CalendarIcon />}
-                tooltipText={`${new Date(movie.release_date) > new Date() ? "Releases" : "Released"} on ${new Date(
-                  movie.release_date
-                ).toLocaleDateString("en-EN", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })}`}
-              >
-                {new Date(movie.release_date).getFullYear()}
-              </MovieStat>
-            )}
-            {movie.runtime > 0 && (
-              <MovieStat
-                icon={<ClockIcon />}
-                tooltipText={`Total runtime of ${dayjs.duration(movie.runtime, "minutes").format("H[h]m[m]")}`}
-              >
-                {movie.runtime}min
-              </MovieStat>
+            {editor && (
+              <div className="flex flex-col">
+                <span className="text-sm font-bold text-muted-foreground">
+                  Edited by
+                </span>
+                <span className="text-sm font-light text-muted-foreground">
+                  {editor.name}
+                </span>
+              </div>
             )}
           </div>
           <section className="col-span-2">
