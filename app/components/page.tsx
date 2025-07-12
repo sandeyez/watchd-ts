@@ -6,6 +6,7 @@ import type { CSSProperties, PropsWithChildren, ReactNode } from "react";
 
 type PageProps = PropsWithChildren<{
   leftElement?: ReactNode;
+  beforeContent?: ReactNode;
   fullWidth?: boolean;
   className?: string;
 }>;
@@ -13,6 +14,7 @@ type PageProps = PropsWithChildren<{
 export function Page({
   children,
   leftElement,
+  beforeContent,
   fullWidth = false,
   className,
 }: PageProps) {
@@ -26,6 +28,7 @@ export function Page({
         } as CSSProperties
       }
     >
+      {beforeContent}
       <nav
         className="min-h-[var(--page-nav-height)] h-[var(--page-nav-height)] w-full flex justify-between gap-4 items-center"
         style={
