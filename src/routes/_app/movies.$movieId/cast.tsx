@@ -3,7 +3,6 @@ import { ArrowLeftIcon, SearchIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { z } from "zod";
 
-
 import { MovieCast } from "@/components/movie/movie-cast";
 import { Page } from "@/components/page";
 import { Button } from "@/components/ui/button";
@@ -49,7 +48,7 @@ function RouteComponent() {
 
   return (
     <Page
-      className="space-y-3"
+      className="space-y-6"
       leftElement={
         <Route.Link to={"/movies/$movieId"}>
           <Button variant={"ghost"} className="-ml-3">
