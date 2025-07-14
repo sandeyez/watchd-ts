@@ -2,8 +2,10 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import {
   CalendarIcon,
+  CheckIcon,
   ChevronRightIcon,
   ClockIcon,
+  PlusIcon,
   StarIcon,
 } from "lucide-react";
 import z from "zod";
@@ -26,9 +28,9 @@ import { tmdb } from "@/lib/tmdb.server";
 
 import { routeApi } from "../movies.$movieId";
 
-import { MovieCrewMember } from "@/components/movie/movie-crew-member";
 import type { CSSProperties } from "react";
 import { useRef } from "react";
+import { RequireSignIn } from "@/components/require-sign-in";
 
 const getRecommendedMovies = createServerFn({
   method: "GET",
@@ -90,8 +92,6 @@ function RouteComponent() {
     path: movie.poster_path,
   });
 
-  const director = movie.crew.find(({ job }) => job === "Director");
-
   return (
     <>
       <Page
@@ -123,7 +123,7 @@ function RouteComponent() {
         )}
         <div
           className={cn(
-            "grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-x-4 gap-y-6 md:gap-x-6",
+            "grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-x-4 gap-y-6 md:gap-x-6",
             backdropImageUrl && "mt-16 sm:mt-48"
           )}
         >
@@ -136,10 +136,10 @@ function RouteComponent() {
             )}
           </div>
           <div
-            className="flex flex-col mt-auto gap-y-2 h-fit"
+            className="flex flex-col mt-auto gap-y-2 h-fit *:empty:hidden col-span-2"
             ref={metadataRef}
           >
-            <h1 className="" ref={titleRef}>
+            <h1 className="flex" ref={titleRef}>
               {movie.title}
             </h1>
             <span className="block italic text-sm font-light text-muted-foreground">
@@ -153,8 +153,8 @@ function RouteComponent() {
               ))}
             </div>
           </div>
-          <div className="space-y-3 text-muted-foreground">
-            <div className="flex items-center justify-between  text-xs h-fit">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between text-xs h-fit text-muted-foreground">
               {movie.vote_count > 0 && (
                 <MovieStat
                   icon={<StarIcon />}
@@ -196,29 +196,40 @@ function RouteComponent() {
                 </MovieStat>
               )}
             </div>
-            {director && (
-              <MovieCrewMember name={director.name} heading="Directed by" />
-            )}
+            <RequireSignIn>
+              <div className="flex flex-col gap-y-2">
+                <Button variant={"default"}>
+                  <CheckIcon />
+                  Check-in
+                </Button>
+                <Button variant={"ghost"}>
+                  <PlusIcon />
+                  Add to watchlist
+                </Button>
+              </div>
+            </RequireSignIn>
           </div>
-          <section>
+          <section className="col-span-2">
             <p className="text-muted-foreground">{movie.overview}</p>
           </section>
         </div>
-        <section className="space-y-3">
-          <div className="w-full flex items-center justify-between">
-            <h2>Cast ({movie.cast.length})</h2>
-            <Link
-              to={"/movies/$movieId/cast"}
-              params={{ movieId: movie.id.toString() }}
-            >
-              <Button variant={"ghost"}>
-                Show all
-                <ChevronRightIcon />
-              </Button>
-            </Link>
-          </div>
-          <MovieCast cast={movie.cast} />
-        </section>
+        {movie.cast.length > 0 && (
+          <section className="space-y-3">
+            <div className="w-full flex items-center justify-between">
+              <h2>Cast ({movie.cast.length})</h2>
+              <Link
+                to={"/movies/$movieId/cast"}
+                params={{ movieId: movie.id.toString() }}
+              >
+                <Button variant={"ghost"}>
+                  Show all
+                  <ChevronRightIcon />
+                </Button>
+              </Link>
+            </div>
+            <MovieCast cast={movie.cast} />
+          </section>
+        )}
         <section className="space-y-3">
           <h2>Where to stream?</h2>
           <WatchProviders />

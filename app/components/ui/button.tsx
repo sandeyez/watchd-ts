@@ -20,7 +20,8 @@ const buttonVariants = cva(
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
-        gradient: "bg-gradient-to-r from-main-blue to-main-pink text-white",
+        gradient:
+          "text-white bg-gradient-to-r from-main-blue via-main-pink to-main-blue bg-[size:200%_auto] transition-all duration-500 ease-in-out hover:bg-[position:right_center] hover:brightness-110",
       },
       align: {
         left: "justify-start",

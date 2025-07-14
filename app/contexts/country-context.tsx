@@ -1,12 +1,6 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState
-} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
-import type {
-  ReactNode} from "react";
+import type { ReactNode } from "react";
 import type { CountryCode } from "tmdb-ts";
 
 /**
@@ -40,7 +34,9 @@ async function getUserCountryByIP(
     const res = await fetch("https://ipapi.co/json/", {
       signal,
     });
+
     if (!res.ok) return null;
+
     const data = await res.json();
     return data.country || null;
   } catch {
