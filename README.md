@@ -1,6 +1,6 @@
 ### TODO (in arbitrary order)
 
-- [ ] Add Clerk webhook to sync users
+- [x] Add Clerk webhook to sync users
 - [ ] Back button functionality
 - [ ] Recommended movies
 - [ ] Responsive movie page
