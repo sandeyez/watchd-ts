@@ -192,18 +192,20 @@ function RouteComponent() {
                 </MovieStat>
               )}
             </div>
-            <RequireSignIn>
-              <div className="flex flex-col gap-y-2">
+            <div className="flex flex-col gap-y-2">
+              <RequireSignIn>
                 <Button variant={"default"}>
                   <CheckIcon />
                   Check-in
                 </Button>
+              </RequireSignIn>
+              <RequireSignIn>
                 <Button variant={"ghost"}>
                   <PlusIcon />
                   Add to watchlist
                 </Button>
-              </div>
-            </RequireSignIn>
+              </RequireSignIn>
+            </div>
           </div>
           <section className="col-span-2">
             <p className="text-muted-foreground">{movie.overview}</p>

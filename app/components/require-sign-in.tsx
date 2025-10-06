@@ -15,6 +15,7 @@ export function RequireSignIn({ children }: PropsWithChildren) {
 
         clerk.openSignIn();
       }}
+      className="contents"
     >
       {children}
     </div>
