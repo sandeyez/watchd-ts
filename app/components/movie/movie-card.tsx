@@ -3,6 +3,7 @@ import { getImageUrl } from "@/lib/tmdb-utils";
 
 import { Skeleton } from "../ui/skeleton";
 import { StarIcon } from "lucide-react";
+import { MoviePoster } from "./movie-poster";
 
 type MovieCardProps = {
   posterPath: string | null;
@@ -29,11 +30,7 @@ export function MovieCard({
 
   return (
     <div className={cn("flex flex-col gap-3", className)}>
-      <div className="w-full rounded-md overflow-hidden">
-        {posterSrc && (
-          <img className="size-full object-cover" src={posterSrc} alt="" />
-        )}
-      </div>
+      <MoviePoster src={posterSrc} />
       <div className="flex flex-col">
         <span>{title}</span>
         <div className="flex items-center gap-2 text-muted-foreground ">

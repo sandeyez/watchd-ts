@@ -31,6 +31,7 @@ import { routeApi } from "../movies.$movieId";
 import type { CSSProperties } from "react";
 import { useRef } from "react";
 import { RequireSignIn } from "@/components/require-sign-in";
+import { MoviePoster } from "@/components/movie/movie-poster";
 
 const getRecommendedMovies = createServerFn({
   method: "GET",
@@ -80,13 +81,13 @@ function RouteComponent() {
   const [metadataRef, metadataRect] = useBoundingClientRect<HTMLDivElement>();
   const titleRef = useRef<HTMLHeadingElement>(null);
 
-  const backdropImageUrl = getImageUrl({
+  const backdropSrc = getImageUrl({
     type: "backdrop",
     size: "w1280",
     path: movie.backdrop_path,
   });
 
-  const posterImageUrl = getImageUrl({
+  const posterSrc = getImageUrl({
     type: "poster",
     size: "w500",
     path: movie.poster_path,
@@ -100,7 +101,7 @@ function RouteComponent() {
           <FixedMovieHeader title={movie.title} originalTitleRef={titleRef} />
         }
       >
-        {backdropImageUrl && (
+        {backdropSrc && (
           <div
             className={cn(
               "absolute -z-10 w-full overflow-clip inset-0 transition-opacity opacity-0 duration-200 ease-in h-[22rem] md:h-[max(calc(var(--title-top)-1rem),0px)]",
@@ -115,7 +116,7 @@ function RouteComponent() {
             }
           >
             <img
-              src={backdropImageUrl}
+              src={backdropSrc}
               alt=""
               className="absolute -inset-2 object-cover object-center opacity-80 -pt-16 size-full"
             />
@@ -124,16 +125,11 @@ function RouteComponent() {
         <div
           className={cn(
             "grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-x-4 gap-y-6 md:gap-x-6",
-            backdropImageUrl && "mt-16 sm:mt-48"
+            backdropSrc && "mt-16 sm:mt-48"
           )}
         >
           <div className="aspect-poster row-span-full w-48 rounded-lg overflow-hidden outline-4 outline-b-0 outline-white outline-solid">
-            {posterImageUrl && (
-              <img
-                src={posterImageUrl}
-                className="object-cover object-top size-full"
-              ></img>
-            )}
+            <MoviePoster src={posterSrc} />
           </div>
           <div
             className="flex flex-col mt-auto gap-y-2 h-fit *:empty:hidden col-span-2"
