@@ -2,7 +2,6 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import {
   CalendarIcon,
-  CheckIcon,
   ChevronRightIcon,
   ClockIcon,
   PlusIcon,
@@ -28,10 +27,14 @@ import { tmdb } from "@/lib/tmdb.server";
 
 import { routeApi } from "../movies.$movieId";
 
-import type { CSSProperties } from "react";
-import { useRef } from "react";
-import { RequireSignIn } from "@/components/require-sign-in";
+import { CheckInModal } from "@/components/movie/checkin-modal";
 import { MoviePoster } from "@/components/movie/movie-poster";
+import { RequireSignIn } from "@/components/require-sign-in";
+import { db } from "@/db/index.server";
+import { movieReviews } from "@/db/schema";
+import { authMiddleware } from "@/middleware/auth-middleware";
+import type { CSSProperties } from "react";
+import { useRef, useState } from "react";
 
 const getRecommendedMovies = createServerFn({
   method: "GET",
@@ -52,6 +55,35 @@ const getRecommendedMovies = createServerFn({
         .sort((a, b) => b.popularity - a.popularity)
         .slice(0, 10),
     };
+  });
+
+const postMovieReview = createServerFn({
+  method: "POST",
+})
+  .middleware([authMiddleware])
+  .validator(
+    z.object({
+      movieId: z.number(),
+      rating: z
+        .number()
+        .min(1, "Rating must be at least 1")
+        .max(5, "Rating must be at most 5"),
+      review: z.string(),
+    })
+  )
+  .handler(async ({ data, context }) => {
+    const { movieId, rating, review } = data;
+
+    await db
+      .insert(movieReviews)
+      .values({
+        movieId,
+        rating,
+        review,
+        userId: context.userId,
+      })
+      .then(console.log)
+      .catch(console.error);
   });
 
 export const Route = createFileRoute("/_app/movies/$movieId/")({
@@ -92,6 +124,9 @@ function RouteComponent() {
     size: "w500",
     path: movie.poster_path,
   });
+
+  // Reset the modal when the modal is closed, we do this by incrementing the key by one
+  const [modalKey, setModalKey] = useState(0);
 
   return (
     <>
@@ -193,12 +228,20 @@ function RouteComponent() {
               )}
             </div>
             <div className="flex flex-col gap-y-2">
-              <RequireSignIn>
-                <Button variant={"default"}>
-                  <CheckIcon />
-                  Check-in
-                </Button>
-              </RequireSignIn>
+              <CheckInModal
+                movie={movie}
+                onClose={() => {
+                  setTimeout(() => {
+                    setModalKey((prev) => prev + 1);
+                  }, 200);
+                }}
+                onSubmit={(rating, review) => {
+                  postMovieReview({
+                    data: { movieId: movie.id, rating, review },
+                  }).then(console.log);
+                }}
+                key={modalKey}
+              />
               <RequireSignIn>
                 <Button variant={"ghost"}>
                   <PlusIcon />
