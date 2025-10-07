@@ -1,9 +1,8 @@
-import { useClerk, useUser } from "@clerk/tanstack-react-start";
+import { useUser } from "@/hooks/use-user";
 import type { PropsWithChildren } from "react";
 
 export function RequireSignIn({ children }: PropsWithChildren) {
-  const { user } = useUser();
-  const clerk = useClerk();
+  const user = useUser();
 
   if (user) return <>{children}</>;
 
@@ -13,7 +12,7 @@ export function RequireSignIn({ children }: PropsWithChildren) {
         e.preventDefault();
         e.stopPropagation();
 
-        clerk.openSignIn();
+        console.log("sign in");
       }}
       className="contents"
     >

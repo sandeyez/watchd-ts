@@ -1,6 +1,5 @@
 // src/routes/__root.tsx
 /// <reference types="vite/client" />
-import { ClerkProvider } from "@clerk/tanstack-react-start";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   HeadContent,
@@ -9,7 +8,6 @@ import {
   createRootRoute,
 } from "@tanstack/react-router";
 import { Analytics } from "@vercel/analytics/react";
-
 
 import { NotFound } from "@/components/not-found";
 import { CountryProvider } from "@/contexts/country-context";
@@ -45,24 +43,16 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <ClerkProvider
-      appearance={{
-        elements: {
-          userButtonAvatarBox: "outline-2 outline-solid outline-white",
-        },
-      }}
-    >
-      <QueryClientProvider client={new QueryClient()}>
-        <LocalStorageConfigProvider>
-          <CountryProvider>
-            <Analytics />
-            <RootDocument>
-              <Outlet />
-            </RootDocument>
-          </CountryProvider>
-        </LocalStorageConfigProvider>
-      </QueryClientProvider>
-    </ClerkProvider>
+    <QueryClientProvider client={new QueryClient()}>
+      <LocalStorageConfigProvider>
+        <CountryProvider>
+          <Analytics />
+          <RootDocument>
+            <Outlet />
+          </RootDocument>
+        </CountryProvider>
+      </LocalStorageConfigProvider>
+    </QueryClientProvider>
   );
 }
 

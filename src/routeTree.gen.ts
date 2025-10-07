@@ -13,13 +13,12 @@ import { createServerRootRoute } from '@tanstack/react-start/server'
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as SignUpSplatRouteImport } from './routes/sign-up.$'
 import { Route as AppSearchRouteImport } from './routes/_app/search'
 import { Route as AppHomeRouteImport } from './routes/_app/home'
 import { Route as AppMoviesMovieIdRouteImport } from './routes/_app/movies.$movieId'
 import { Route as AppMoviesMovieIdIndexRouteImport } from './routes/_app/movies.$movieId/index'
 import { Route as AppMoviesMovieIdCastRouteImport } from './routes/_app/movies.$movieId/cast'
-import { ServerRoute as WebhooksClerkHandleEventsServerRouteImport } from './routes/webhooks/clerk/handle-events'
+import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth/$'
 
 const rootServerRouteImport = createServerRootRoute()
 
@@ -30,11 +29,6 @@ const AppRoute = AppRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SignUpSplatRoute = SignUpSplatRouteImport.update({
-  id: '/sign-up/$',
-  path: '/sign-up/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppSearchRoute = AppSearchRouteImport.update({
@@ -62,18 +56,16 @@ const AppMoviesMovieIdCastRoute = AppMoviesMovieIdCastRouteImport.update({
   path: '/cast',
   getParentRoute: () => AppMoviesMovieIdRoute,
 } as any)
-const WebhooksClerkHandleEventsServerRoute =
-  WebhooksClerkHandleEventsServerRouteImport.update({
-    id: '/webhooks/clerk/handle-events',
-    path: '/webhooks/clerk/handle-events',
-    getParentRoute: () => rootServerRouteImport,
-  } as any)
+const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/home': typeof AppHomeRoute
   '/search': typeof AppSearchRoute
-  '/sign-up/$': typeof SignUpSplatRoute
   '/movies/$movieId': typeof AppMoviesMovieIdRouteWithChildren
   '/movies/$movieId/cast': typeof AppMoviesMovieIdCastRoute
   '/movies/$movieId/': typeof AppMoviesMovieIdIndexRoute
@@ -82,7 +74,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/home': typeof AppHomeRoute
   '/search': typeof AppSearchRoute
-  '/sign-up/$': typeof SignUpSplatRoute
   '/movies/$movieId/cast': typeof AppMoviesMovieIdCastRoute
   '/movies/$movieId': typeof AppMoviesMovieIdIndexRoute
 }
@@ -92,7 +83,6 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/_app/home': typeof AppHomeRoute
   '/_app/search': typeof AppSearchRoute
-  '/sign-up/$': typeof SignUpSplatRoute
   '/_app/movies/$movieId': typeof AppMoviesMovieIdRouteWithChildren
   '/_app/movies/$movieId/cast': typeof AppMoviesMovieIdCastRoute
   '/_app/movies/$movieId/': typeof AppMoviesMovieIdIndexRoute
@@ -103,25 +93,17 @@ export interface FileRouteTypes {
     | '/'
     | '/home'
     | '/search'
-    | '/sign-up/$'
     | '/movies/$movieId'
     | '/movies/$movieId/cast'
     | '/movies/$movieId/'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/home'
-    | '/search'
-    | '/sign-up/$'
-    | '/movies/$movieId/cast'
-    | '/movies/$movieId'
+  to: '/' | '/home' | '/search' | '/movies/$movieId/cast' | '/movies/$movieId'
   id:
     | '__root__'
     | '/'
     | '/_app'
     | '/_app/home'
     | '/_app/search'
-    | '/sign-up/$'
     | '/_app/movies/$movieId'
     | '/_app/movies/$movieId/cast'
     | '/_app/movies/$movieId/'
@@ -130,28 +112,27 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
-  SignUpSplatRoute: typeof SignUpSplatRoute
 }
 export interface FileServerRoutesByFullPath {
-  '/webhooks/clerk/handle-events': typeof WebhooksClerkHandleEventsServerRoute
+  '/api/auth/$': typeof ApiAuthSplatServerRoute
 }
 export interface FileServerRoutesByTo {
-  '/webhooks/clerk/handle-events': typeof WebhooksClerkHandleEventsServerRoute
+  '/api/auth/$': typeof ApiAuthSplatServerRoute
 }
 export interface FileServerRoutesById {
   __root__: typeof rootServerRouteImport
-  '/webhooks/clerk/handle-events': typeof WebhooksClerkHandleEventsServerRoute
+  '/api/auth/$': typeof ApiAuthSplatServerRoute
 }
 export interface FileServerRouteTypes {
   fileServerRoutesByFullPath: FileServerRoutesByFullPath
-  fullPaths: '/webhooks/clerk/handle-events'
+  fullPaths: '/api/auth/$'
   fileServerRoutesByTo: FileServerRoutesByTo
-  to: '/webhooks/clerk/handle-events'
-  id: '__root__' | '/webhooks/clerk/handle-events'
+  to: '/api/auth/$'
+  id: '__root__' | '/api/auth/$'
   fileServerRoutesById: FileServerRoutesById
 }
 export interface RootServerRouteChildren {
-  WebhooksClerkHandleEventsServerRoute: typeof WebhooksClerkHandleEventsServerRoute
+  ApiAuthSplatServerRoute: typeof ApiAuthSplatServerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -168,13 +149,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sign-up/$': {
-      id: '/sign-up/$'
-      path: '/sign-up/$'
-      fullPath: '/sign-up/$'
-      preLoaderRoute: typeof SignUpSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/search': {
@@ -216,11 +190,11 @@ declare module '@tanstack/react-router' {
 }
 declare module '@tanstack/react-start/server' {
   interface ServerFileRoutesByPath {
-    '/webhooks/clerk/handle-events': {
-      id: '/webhooks/clerk/handle-events'
-      path: '/webhooks/clerk/handle-events'
-      fullPath: '/webhooks/clerk/handle-events'
-      preLoaderRoute: typeof WebhooksClerkHandleEventsServerRouteImport
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatServerRouteImport
       parentRoute: typeof rootServerRouteImport
     }
   }
@@ -256,13 +230,12 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
-  SignUpSplatRoute: SignUpSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 const rootServerRouteChildren: RootServerRouteChildren = {
-  WebhooksClerkHandleEventsServerRoute: WebhooksClerkHandleEventsServerRoute,
+  ApiAuthSplatServerRoute: ApiAuthSplatServerRoute,
 }
 export const serverRouteTree = rootServerRouteImport
   ._addFileChildren(rootServerRouteChildren)

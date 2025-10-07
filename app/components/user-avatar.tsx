@@ -1,4 +1,4 @@
-import { useUser } from "@clerk/tanstack-react-start";
+import { useUser } from "@/hooks/use-user";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import type { ComponentProps } from "react";
 
@@ -7,12 +7,12 @@ type UserAvatarProps = ComponentProps<typeof Avatar>;
 export function UserAvatar({ ...props }: UserAvatarProps) {
   const user = useUser();
 
-  if (!user.user) return null;
+  if (!user) return null;
 
   return (
     <Avatar {...props}>
-      <AvatarImage src={user.user.imageUrl} />
-      <AvatarFallback>{user.user.firstName?.charAt(0)}</AvatarFallback>
+      <AvatarImage src={user.image ?? undefined} />
+      <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
     </Avatar>
   );
 }

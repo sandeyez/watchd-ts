@@ -1,6 +1,5 @@
 import { cn } from "@/lib/tailwind";
 import { getImageUrl } from "@/lib/tmdb-utils";
-import { useUser } from "@clerk/tanstack-react-start";
 import { CheckIcon } from "lucide-react";
 import type { Variants } from "motion/react";
 import { LazyMotion, domAnimation, m } from "motion/react";
@@ -21,6 +20,7 @@ import {
 import { Textarea } from "../ui/textarea";
 import { UserAvatar } from "../user-avatar";
 import { MoviePoster } from "./movie-poster";
+import { useUser } from "@/hooks/use-user";
 
 const textAreaContainerVariants: Variants = {
   hidden: {
@@ -122,7 +122,7 @@ export function CheckInModal({ movie, onClose, onSubmit }: CheckInModalProps) {
   }
 
   return (
-    <Dialog open={modalOpen && !!user.user} onOpenChange={handleOpenChange}>
+    <Dialog open={modalOpen && !!user} onOpenChange={handleOpenChange}>
       <RequireSignIn>
         <DialogTrigger asChild>
           <Button variant={"default"}>
@@ -159,7 +159,7 @@ export function CheckInModal({ movie, onClose, onSubmit }: CheckInModalProps) {
               <div className="flex flex-col">
                 <span className="flex items-center gap-x-1 text-muted-foreground text-sm">
                   <UserAvatar className="size-[1lh]" />
-                  <span className="font-semibold">{user.user?.firstName}</span>
+                  <span className="font-semibold">{user?.name}</span>
                   watched
                 </span>
                 <span className="font-medium text-xl">{movie.title}</span>

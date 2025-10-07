@@ -31,7 +31,7 @@ import { CheckInModal } from "@/components/movie/checkin-modal";
 import { MoviePoster } from "@/components/movie/movie-poster";
 import { RequireSignIn } from "@/components/require-sign-in";
 import { db } from "@/db/index.server";
-import { movieReviews } from "@/db/schema";
+import { movieReview } from "@/db/schema";
 import { authMiddleware } from "@/middleware/auth-middleware";
 import type { CSSProperties } from "react";
 import { useRef, useState } from "react";
@@ -75,7 +75,7 @@ const postMovieReview = createServerFn({
     const { movieId, rating, review } = data;
 
     await db
-      .insert(movieReviews)
+      .insert(movieReview)
       .values({
         movieId,
         rating,

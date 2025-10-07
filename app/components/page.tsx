@@ -1,5 +1,3 @@
-import { SignInButton, UserButton, useUser } from "@clerk/tanstack-react-start";
-
 import { cn } from "@/lib/tailwind";
 
 import type { CSSProperties, PropsWithChildren, ReactNode } from "react";
@@ -18,7 +16,6 @@ export function Page({
   fullWidth = false,
   className,
 }: PageProps) {
-  const { user } = useUser();
   return (
     <div
       className="relative md:*:px-[var(--page-padding)] *:px-[calc(var(--page-padding)/2)] h-full flex flex-col"
@@ -38,7 +35,7 @@ export function Page({
         }
       >
         {leftElement ?? <div />}
-        {user ? <UserButton /> : <SignInButton mode="modal" />}
+        SIGN IN
       </nav>
       <div
         style={

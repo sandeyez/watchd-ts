@@ -1,4 +1,4 @@
-import { getAuth } from "@clerk/tanstack-react-start/server";
+import { auth } from "@/auth";
 import { createMiddleware } from "@tanstack/react-start";
 import { getWebRequest } from "@tanstack/react-start/server";
 
@@ -7,11 +7,11 @@ export const authMiddleware = createMiddleware({ type: "function" }).server(
     const request = await getWebRequest();
     console.log(request);
 
-    const auth = await getAuth(request);
+    const session = await auth.api.getSession({
+      headers: request.headers,
+    });
 
-    console.log(auth);
-
-    const userId = auth.userId;
+    const userId = session?.user.id;
 
     if (!userId) {
       throw new Response("Unauthorized", { status: 401 });
