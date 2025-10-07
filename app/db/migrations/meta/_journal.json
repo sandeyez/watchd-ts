@@ -8,6 +8,13 @@
       "when": 1752177634402,
       "tag": "0000_solid_prowler",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1759863302700,
+      "tag": "0001_slim_caretaker",
+      "breakpoints": true
     }
   ]
 }
