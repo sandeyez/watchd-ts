@@ -35,7 +35,6 @@ export function Page({
         }
       >
         {leftElement ?? <div />}
-        SIGN IN
       </nav>
       <div
         style={

@@ -7,7 +7,7 @@ import { tmdb } from "@/lib/tmdb.server";
 export const getMovieDetails = createServerFn({
   method: "GET",
 })
-  .validator(
+  .inputValidator(
     z.object({
       movieId: z.number(),
     })

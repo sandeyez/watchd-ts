@@ -14,9 +14,31 @@ import { CountryProvider } from "@/contexts/country-context";
 import { LocalStorageConfigProvider } from "@/contexts/local-storage-context";
 import appCss from "@/styles/app.css?url";
 
+import { auth } from "@/auth";
+import { createServerFn } from "@tanstack/react-start";
+import { getRequest } from "@tanstack/react-start/server";
 import type { ReactNode } from "react";
 
+const getUser = createServerFn({ method: "GET" }).handler(async () => {
+  const request = await getRequest();
+
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
+
+  const user = session?.user;
+
+  return user;
+});
+
 export const Route = createRootRoute({
+  beforeLoad: async () => {
+    const user = await getUser();
+
+    return {
+      user,
+    };
+  },
   head: () => ({
     meta: [
       {
@@ -58,11 +80,11 @@ function RootComponent() {
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html>
+    <html className="overscroll-none">
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="h-screen w-screen size-full bg-background antialiased overflow-x-clip overflow-y-auto overscroll-none">
         {children}
         <Scripts />
       </body>

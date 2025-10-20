@@ -15,6 +15,7 @@ import { GradientText } from "./gradient-text";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarHeader,
@@ -24,6 +25,8 @@ import {
 } from "./ui/sidebar/sidebar";
 
 import type { ReactNode } from "react";
+import { useUser } from "@/hooks/use-user";
+import { UserAvatar } from "./user-avatar";
 
 type SidebarItem = {
   title: string;
@@ -88,6 +91,8 @@ const sidebarGroups: Array<SidebarItemGroup> = [
 ];
 
 export function AppSidebar() {
+  const user = useUser();
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -139,6 +144,22 @@ export function AppSidebar() {
           </SidebarGroup>
         ))}
       </SidebarContent>
+      <SidebarFooter>
+        {user && (
+          <SidebarMenuButton
+            size="lg"
+            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+          >
+            <UserAvatar />
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate">{user.firstName}</span>
+              <span className="truncate text-xs font-normal text-sidebar-secondary">
+                {user.email}
+              </span>
+            </div>
+          </SidebarMenuButton>
+        )}
+      </SidebarFooter>
     </Sidebar>
   );
 }

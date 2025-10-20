@@ -31,7 +31,7 @@ import { CheckInModal } from "@/components/movie/checkin-modal";
 import { MoviePoster } from "@/components/movie/movie-poster";
 import { RequireSignIn } from "@/components/require-sign-in";
 import { db } from "@/db/index.server";
-import { movieReview } from "@/db/schema";
+import { movieReview } from "@/db/schemas/schema";
 import { authMiddleware } from "@/middleware/auth-middleware";
 import type { CSSProperties } from "react";
 import { useRef, useState } from "react";
@@ -39,7 +39,7 @@ import { useRef, useState } from "react";
 const getRecommendedMovies = createServerFn({
   method: "GET",
 })
-  .validator(
+  .inputValidator(
     z.object({
       movieId: z.number(),
     })
@@ -61,7 +61,7 @@ const postMovieReview = createServerFn({
   method: "POST",
 })
   .middleware([authMiddleware])
-  .validator(
+  .inputValidator(
     z.object({
       movieId: z.number(),
       rating: z

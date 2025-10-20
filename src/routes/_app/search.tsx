@@ -20,7 +20,7 @@ import { UrlBuilderService } from "@/lib/url";
 export const searchMovies = createServerFn({
   method: "GET",
 })
-  .validator(
+  .inputValidator(
     z.object({
       query: z
         .string()

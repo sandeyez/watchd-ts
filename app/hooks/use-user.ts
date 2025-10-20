@@ -1,6 +1,10 @@
-import { authClient } from "@/lib/auth-client";
+import { useRouteContext } from "@tanstack/react-router";
 
 export function useUser() {
-  const { data } = authClient.useSession();
-  return data?.user;
+  const user = useRouteContext({
+    from: "__root__",
+    select: (context) => context.user,
+  });
+
+  return user;
 }

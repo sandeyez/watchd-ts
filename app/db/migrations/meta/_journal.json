@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1752177634402,
-      "tag": "0000_solid_prowler",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1759863302700,
-      "tag": "0001_slim_caretaker",
+      "when": 1760990282205,
+      "tag": "0000_large_machine_man",
       "breakpoints": true
     }
   ]

@@ -12,7 +12,7 @@ function RouteComponent() {
 
   return (
     <Page>
-      <h1>{user ? `Welcome back, ${user.name}` : "Welcome back"}</h1>
+      <h1>{user ? `Welcome back, ${user.firstName}` : "Welcome to "}</h1>
     </Page>
   );
 }
