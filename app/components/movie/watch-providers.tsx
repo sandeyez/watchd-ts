@@ -25,7 +25,7 @@ const watchProviderTypeToDisplayNameMap: Record<WatchProviderType, string> = {
 const getWatchProviders = createServerFn({
   method: "GET",
 })
-  .validator(
+  .inputValidator(
     z.object({
       movieId: z.number(),
       countryCode: z.enum(CountryCodes),
