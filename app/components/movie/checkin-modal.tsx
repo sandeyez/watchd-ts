@@ -1,6 +1,6 @@
 import { cn } from "@/lib/tailwind";
 import { getImageUrl } from "@/lib/tmdb-utils";
-import { CheckIcon } from "lucide-react";
+import { CheckIcon, CircleCheckIcon } from "lucide-react";
 import type { Variants } from "motion/react";
 import { LazyMotion, domAnimation, m } from "motion/react";
 import { useRef, useState } from "react";
@@ -80,11 +80,21 @@ type CheckInModalProps = {
     MovieDetails,
     "poster_path" | "backdrop_path" | "title" | "release_date"
   >;
+
+  userHasReview: boolean;
+  loading: boolean;
+
   onClose: () => void;
   onSubmit: (rating: number, review: string) => void;
 };
 
-export function CheckInModal({ movie, onClose, onSubmit }: CheckInModalProps) {
+export function CheckInModal({
+  movie,
+  userHasReview,
+  onClose,
+  loading = false,
+  onSubmit,
+}: CheckInModalProps) {
   const user = useUser();
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -122,13 +132,22 @@ export function CheckInModal({ movie, onClose, onSubmit }: CheckInModalProps) {
   }
 
   return (
-    <Dialog open={modalOpen && !!user} onOpenChange={handleOpenChange}>
+    <Dialog
+      open={modalOpen && !!user && !userHasReview}
+      onOpenChange={handleOpenChange}
+    >
       <RequireSignIn>
         <DialogTrigger asChild>
-          <Button variant={"default"}>
-            <CheckIcon />
-            Check-in
-          </Button>
+          {userHasReview ? (
+            <Button variant={"secondary"} disabled>
+              <CircleCheckIcon /> Checked in
+            </Button>
+          ) : (
+            <Button>
+              <CheckIcon />
+              {loading ? "Loading..." : "Check-in"}
+            </Button>
+          )}
         </DialogTrigger>
       </RequireSignIn>
       <DialogContent
