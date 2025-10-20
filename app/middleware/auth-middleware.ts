@@ -5,7 +5,6 @@ import { getRequest } from "@tanstack/react-start/server";
 export const authMiddleware = createMiddleware({ type: "function" }).server(
   async ({ next }) => {
     const request = await getRequest();
-    console.log(request);
 
     const session = await auth.api.getSession({
       headers: request.headers,
