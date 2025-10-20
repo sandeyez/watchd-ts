@@ -1,4 +1,4 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, useRouter } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import {
   CalendarIcon,
@@ -33,6 +33,7 @@ import { RequireSignIn } from "@/components/require-sign-in";
 import { db } from "@/db/index.server";
 import { movieReview } from "@/db/schemas/schema";
 import { authMiddleware } from "@/middleware/auth-middleware";
+import { useMutation } from "@tanstack/react-query";
 import type { CSSProperties } from "react";
 import { useRef, useState } from "react";
 
@@ -57,6 +58,24 @@ const getRecommendedMovies = createServerFn({
     };
   });
 
+const getUserMovieReview = createServerFn({
+  method: "GET",
+})
+  .inputValidator(
+    z.object({
+      movieId: z.number(),
+    })
+  )
+  .middleware([authMiddleware])
+  .handler(async ({ data, context }) => {
+    const { movieId } = data;
+    const review = await db.query.movieReview.findFirst({
+      where: (dbReview, { eq, and }) =>
+        and(eq(dbReview.movieId, movieId), eq(dbReview.userId, context.userId)),
+    });
+    return review;
+  });
+
 const postMovieReview = createServerFn({
   method: "POST",
 })
@@ -74,20 +93,20 @@ const postMovieReview = createServerFn({
   .handler(async ({ data, context }) => {
     const { movieId, rating, review } = data;
 
-    await db
-      .insert(movieReview)
-      .values({
-        movieId,
-        rating,
-        review,
-        userId: context.userId,
-      })
-      .then(console.log)
-      .catch(console.error);
+    await db.insert(movieReview).values({
+      movieId,
+      rating,
+      review,
+      userId: context.userId,
+    });
   });
 
 export const Route = createFileRoute("/_app/movies/$movieId/")({
-  component: RouteComponent,
+  component: () => {
+    const { movieId } = Route.useParams();
+
+    return <RouteComponent key={movieId} />;
+  },
   loader: async ({ params }) => {
     const { movieId: movieIdAsString } = params;
 
@@ -96,19 +115,38 @@ export const Route = createFileRoute("/_app/movies/$movieId/")({
       throw new Error("Invalid movieId");
     }
 
-    const [recommendedMovies] = await Promise.all([
+    const [recommendedMovies, userReview] = await Promise.all([
       getRecommendedMovies({ data: { movieId } }),
+      getUserMovieReview({ data: { movieId } }),
     ]);
 
     return {
       recommendedMovies: recommendedMovies.results,
+      userReview,
     };
   },
 });
 
 function RouteComponent() {
   const movie = routeApi.useLoaderData();
-  const { recommendedMovies } = Route.useLoaderData();
+  const { recommendedMovies, userReview } = Route.useLoaderData();
+
+  const [optimisticUserHasReview, setOptimisticUserHasReview] =
+    useState(!!userReview);
+
+  const router = useRouter();
+
+  const postMovieReviewMutation = useMutation({
+    mutationFn: (data: { movieId: number; rating: number; review: string }) =>
+      postMovieReview({ data }),
+    onSuccess: () => {
+      router.invalidate();
+      setOptimisticUserHasReview(true);
+    },
+    onError: () => {
+      setOptimisticUserHasReview(false);
+    },
+  });
 
   const [metadataRef, metadataRect] = useBoundingClientRect<HTMLDivElement>();
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -230,16 +268,20 @@ function RouteComponent() {
             <div className="flex flex-col gap-y-2">
               <CheckInModal
                 movie={movie}
+                userHasReview={optimisticUserHasReview}
                 onClose={() => {
                   setTimeout(() => {
                     setModalKey((prev) => prev + 1);
                   }, 200);
                 }}
                 onSubmit={(rating, review) => {
-                  postMovieReview({
-                    data: { movieId: movie.id, rating, review },
-                  }).then(console.log);
+                  postMovieReviewMutation.mutate({
+                    movieId: movie.id,
+                    rating,
+                    review,
+                  });
                 }}
+                loading={postMovieReviewMutation.isPending}
                 key={modalKey}
               />
               <RequireSignIn>
