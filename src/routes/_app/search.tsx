@@ -15,7 +15,6 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { Noun } from "@/lib/language";
 import { cn, tw } from "@/lib/tailwind";
 import { tmdb } from "@/lib/tmdb.server";
-import { UrlBuilderService } from "@/lib/url";
 
 export const searchMovies = createServerFn({
   method: "GET",
@@ -208,7 +207,10 @@ function RouteComponent() {
               {searchResults.data.results.map(
                 ({ title, release_date, id, poster_path, vote_average }) => (
                   <li key={id}>
-                    <Link to={UrlBuilderService.getMoviePageUrl(id)}>
+                    <Link
+                      to={"/movies/$movieId"}
+                      params={{ movieId: id.toString() }}
+                    >
                       <MovieCard
                         title={title}
                         posterPath={poster_path}
