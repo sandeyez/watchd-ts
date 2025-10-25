@@ -125,6 +125,9 @@ export const Route = createFileRoute("/_app/movies/$movieId/")({
       userReview,
     };
   },
+  staticData: {
+    hideSidebar: true,
+  },
 });
 
 function RouteComponent() {
@@ -198,10 +201,10 @@ function RouteComponent() {
         <div
           className={cn(
             "grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-x-4 gap-y-6 md:gap-x-6",
-            backdropSrc && "mt-16 sm:mt-48"
+            backdropSrc && "mt-16 sm:mt-[calc(max(32svh,10rem))]"
           )}
         >
-          <div className="aspect-poster row-span-full w-48 rounded-lg overflow-hidden outline-4 outline-b-0 outline-white outline-solid">
+          <div className="aspect-poster row-span-full w-48 rounded-lg overflow-hidden outline-4 outline-b-0 outline-white outline-solid max-sm:m-auto">
             <MoviePoster src={posterSrc} />
           </div>
           <div

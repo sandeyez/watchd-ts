@@ -7,7 +7,6 @@ import { Button } from "./ui/button";
 
 import type { ReactNode } from "react";
 
-
 interface HorizontalScrollProps {
   children: ReactNode;
   gap?: number;
@@ -155,7 +154,7 @@ function HorizontalScroll({
           variant={"secondary"}
           onClick={() => scroll("left")}
           className={cn(
-            "absolute left-0 top-1/2 -translate-y-1/2 z-10 aspect-square rounded-full transition-all duration-200",
+            "absolute left-2 top-1/2 -translate-y-1/2 z-10 aspect-square rounded-full transition-all duration-200",
             {
               "[pointer:coarse]:opacity-0 group-hover:opacity-100":
                 canScrollLeft,
@@ -175,7 +174,7 @@ function HorizontalScroll({
           variant={"secondary"}
           onClick={() => scroll("right")}
           className={cn(
-            "absolute right-0 top-1/2 -translate-y-1/2 z-10 aspect-square rounded-full transition-all duration-200",
+            "absolute right-2 top-1/2 -translate-y-1/2 z-10 aspect-square rounded-full transition-all duration-200",
             {
               "[pointer:coarse]:opacity-0 group-hover:opacity-100":
                 canScrollRight,

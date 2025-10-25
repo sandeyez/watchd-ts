@@ -178,7 +178,7 @@ export function CheckInModal({
               <div className="flex flex-col">
                 <span className="flex items-center gap-x-1 text-muted-foreground text-sm">
                   <UserAvatar className="size-[1lh]" />
-                  <span className="font-semibold">{user?.name}</span>
+                  <span className="font-semibold">{user?.firstName}</span>
                   watched
                 </span>
                 <span className="font-medium text-xl">{movie.title}</span>
@@ -189,7 +189,7 @@ export function CheckInModal({
             </div>
             {backdropSrc && (
               <>
-                <div className="absolute transition-transform duration-200 ease-out group-hover:scale-110 size-full [--extra-padding:4px] -top-[var(--extra-padding)] -left-[var(--extra-padding)] w-[calc(100%+var(--extra-padding)*2)] h-[calc(100%+var(--extra-padding)*2)] -z-20 opacity-30 blur-[2px]">
+                <div className="absolute size-full [--extra-padding:4px] -top-[var(--extra-padding)] -left-[var(--extra-padding)] w-[calc(100%+var(--extra-padding)*2)] h-[calc(100%+var(--extra-padding)*2)] -z-20 opacity-30 blur-[2px]">
                   <img
                     src={backdropSrc}
                     alt=""

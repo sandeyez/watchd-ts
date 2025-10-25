@@ -27,6 +27,8 @@ import {
 import type { ReactNode } from "react";
 import { useUser } from "@/hooks/use-user";
 import { UserAvatar } from "./user-avatar";
+import { useSidebar } from "./ui/sidebar/sidebar-context";
+import { cn } from "@/lib/tailwind";
 
 type SidebarItem = {
   title: string;
@@ -93,13 +95,45 @@ const sidebarGroups: Array<SidebarItemGroup> = [
 export function AppSidebar() {
   const user = useUser();
 
+  const { open } = useSidebar();
+
+  console.log(open);
+
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
       <SidebarHeader>
-        <div className="w-fit p-2">
+        <div
+          className={cn("w-fit p-2", {
+            "px-0": !open,
+          })}
+        >
           <Link to="/home" className="select-none relative h-fit w-fit">
             <GradientText>
-              <span className="text-2xl font-black">watchd.</span>
+              <span
+                className={cn(
+                  "text-2xl font-black transition-[font-size] duration-200 ease-in-out",
+                  {
+                    "text-xl": !open,
+                  }
+                )}
+              >
+                w
+                <span
+                  className={cn({
+                    hidden: !open,
+                  })}
+                >
+                  atch
+                </span>
+                d
+                <span
+                  className={cn({
+                    hidden: !open,
+                  })}
+                >
+                  .
+                </span>
+              </span>
             </GradientText>
           </Link>
         </div>
