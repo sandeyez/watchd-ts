@@ -4,3 +4,4 @@
 /app/generated
 /.tanstack
 .eslintcache
+/dist
