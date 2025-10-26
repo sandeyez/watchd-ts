@@ -107,7 +107,7 @@ export const Route = createFileRoute("/_app/movies/$movieId/")({
 
     return <RouteComponent key={movieId} />;
   },
-  loader: async ({ params }) => {
+  loader: async ({ params, context }) => {
     const { movieId: movieIdAsString } = params;
 
     const movieId = Number(movieIdAsString);
@@ -117,16 +117,13 @@ export const Route = createFileRoute("/_app/movies/$movieId/")({
 
     const [recommendedMovies, userReview] = await Promise.all([
       getRecommendedMovies({ data: { movieId } }),
-      getUserMovieReview({ data: { movieId } }),
+      context.user ? getUserMovieReview({ data: { movieId } }) : null,
     ]);
 
     return {
       recommendedMovies: recommendedMovies.results,
       userReview,
     };
-  },
-  staticData: {
-    hideSidebar: true,
   },
 });
 

@@ -9,9 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as LoginRouteImport } from './routes/login'
+import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
+import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AppSearchRouteImport } from './routes/_app/search'
 import { Route as AppHomeRouteImport } from './routes/_app/home'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -19,9 +21,8 @@ import { Route as AppMoviesMovieIdRouteImport } from './routes/_app/movies.$movi
 import { Route as AppMoviesMovieIdIndexRouteImport } from './routes/_app/movies.$movieId/index'
 import { Route as AppMoviesMovieIdCastRouteImport } from './routes/_app/movies.$movieId/cast'
 
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+const AuthRoute = AuthRouteImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRoute = AppRouteImport.update({
@@ -32,6 +33,16 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthSignupRoute = AuthSignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthRoute,
 } as any)
 const AppSearchRoute = AppSearchRouteImport.update({
   id: '/search',
@@ -66,9 +77,10 @@ const AppMoviesMovieIdCastRoute = AppMoviesMovieIdCastRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/login': typeof LoginRoute
   '/home': typeof AppHomeRoute
   '/search': typeof AppSearchRoute
+  '/login': typeof AuthLoginRoute
+  '/signup': typeof AuthSignupRoute
   '/movies/$movieId': typeof AppMoviesMovieIdRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/movies/$movieId/cast': typeof AppMoviesMovieIdCastRoute
@@ -76,9 +88,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/login': typeof LoginRoute
   '/home': typeof AppHomeRoute
   '/search': typeof AppSearchRoute
+  '/login': typeof AuthLoginRoute
+  '/signup': typeof AuthSignupRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/movies/$movieId/cast': typeof AppMoviesMovieIdCastRoute
   '/movies/$movieId': typeof AppMoviesMovieIdIndexRoute
@@ -87,9 +100,11 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
-  '/login': typeof LoginRoute
+  '/_auth': typeof AuthRouteWithChildren
   '/_app/home': typeof AppHomeRoute
   '/_app/search': typeof AppSearchRoute
+  '/_auth/login': typeof AuthLoginRoute
+  '/_auth/signup': typeof AuthSignupRoute
   '/_app/movies/$movieId': typeof AppMoviesMovieIdRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_app/movies/$movieId/cast': typeof AppMoviesMovieIdCastRoute
@@ -99,9 +114,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/login'
     | '/home'
     | '/search'
+    | '/login'
+    | '/signup'
     | '/movies/$movieId'
     | '/api/auth/$'
     | '/movies/$movieId/cast'
@@ -109,9 +125,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/login'
     | '/home'
     | '/search'
+    | '/login'
+    | '/signup'
     | '/api/auth/$'
     | '/movies/$movieId/cast'
     | '/movies/$movieId'
@@ -119,9 +136,11 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_app'
-    | '/login'
+    | '/_auth'
     | '/_app/home'
     | '/_app/search'
+    | '/_auth/login'
+    | '/_auth/signup'
     | '/_app/movies/$movieId'
     | '/api/auth/$'
     | '/_app/movies/$movieId/cast'
@@ -131,17 +150,17 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
-  LoginRoute: typeof LoginRoute
+  AuthRoute: typeof AuthRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
@@ -157,6 +176,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_auth/signup': {
+      id: '/_auth/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof AuthSignupRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/login': {
+      id: '/_auth/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/_app/search': {
       id: '/_app/search'
@@ -230,10 +263,22 @@ const AppRouteChildren: AppRouteChildren = {
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
+interface AuthRouteChildren {
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthSignupRoute: typeof AuthSignupRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthLoginRoute: AuthLoginRoute,
+  AuthSignupRoute: AuthSignupRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
-  LoginRoute: LoginRoute,
+  AuthRoute: AuthRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

@@ -15,6 +15,7 @@ import { LocalStorageConfigProvider } from "@/contexts/local-storage-context";
 import appCss from "@/styles/app.css?url";
 
 import { auth } from "@/auth";
+import { db } from "@/db/index.server";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import type { ReactNode } from "react";
@@ -26,7 +27,23 @@ const getUser = createServerFn({ method: "GET" }).handler(async () => {
     headers: request.headers,
   });
 
-  const user = session?.user;
+  const metadata = session?.user
+    ? await db.query.userMetadata.findFirst({
+        where: (userMetadata, { eq }) =>
+          eq(userMetadata.userId, session.user.id),
+        columns: {
+          countryCode: true,
+          countryCodeLastUpdatedAt: true,
+        },
+      })
+    : null;
+
+  const user = session?.user
+    ? {
+        ...session.user,
+        metadata,
+      }
+    : null;
 
   return user;
 });
@@ -34,6 +51,13 @@ const getUser = createServerFn({ method: "GET" }).handler(async () => {
 export const Route = createRootRoute({
   beforeLoad: async () => {
     const user = await getUser();
+
+    return {
+      user,
+    };
+  },
+  loader: ({ context }) => {
+    const { user } = context;
 
     return {
       user,
@@ -64,10 +88,17 @@ export const Route = createRootRoute({
 });
 
 function RootComponent() {
+  const { user } = Route.useLoaderData();
+
+  const { countryCode, countryCodeLastUpdatedAt } = user?.metadata ?? {};
+
   return (
     <QueryClientProvider client={new QueryClient()}>
       <LocalStorageConfigProvider>
-        <CountryProvider>
+        <CountryProvider
+          countryCode={countryCode ?? null}
+          countryCodeLastUpdatedAt={countryCodeLastUpdatedAt ?? null}
+        >
           <Analytics />
           <RootDocument>
             <Outlet />

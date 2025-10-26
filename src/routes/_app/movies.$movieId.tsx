@@ -40,6 +40,9 @@ export const Route = createFileRoute("/_app/movies/$movieId")({
 
     return details;
   },
+  staticData: {
+    hideSidebar: true,
+  },
 });
 
 export const routeApi = getRouteApi("/_app/movies/$movieId");

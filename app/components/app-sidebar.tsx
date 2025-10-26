@@ -4,6 +4,7 @@ import {
   ClockIcon,
   HomeIcon,
   ListIcon,
+  LogInIcon,
   MoreHorizontal,
   SearchIcon,
   SparklesIcon,
@@ -93,19 +94,18 @@ const sidebarGroups: Array<SidebarItemGroup> = [
 ];
 
 export function AppSidebar() {
-  const user = useUser();
-
   const { open } = useSidebar();
-
-  console.log(open);
 
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
         <div
-          className={cn("w-fit p-2", {
-            "px-0": !open,
-          })}
+          className={cn(
+            "w-fit p-2 transition-[padding] duration-200 ease-in-out",
+            {
+              "px-0": !open,
+            }
+          )}
         >
           <Link to="/home" className="select-none relative h-fit w-fit">
             <GradientText>
@@ -179,21 +179,41 @@ export function AppSidebar() {
         ))}
       </SidebarContent>
       <SidebarFooter>
-        {user && (
-          <SidebarMenuButton
-            size="lg"
-            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-          >
-            <UserAvatar />
-            <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate">{user.firstName}</span>
-              <span className="truncate text-xs font-normal text-sidebar-secondary">
-                {user.email}
-              </span>
-            </div>
-          </SidebarMenuButton>
-        )}
+        <SidebarUserButton />
       </SidebarFooter>
     </Sidebar>
+  );
+}
+
+function SidebarUserButton() {
+  const user = useUser();
+
+  if (!user)
+    return (
+      <SidebarMenuButton
+        size="lg"
+        className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+        asChild
+      >
+        <Link to="/login">
+          <LogInIcon />
+          <span>Log in</span>
+        </Link>
+      </SidebarMenuButton>
+    );
+
+  return (
+    <SidebarMenuButton
+      size="lg"
+      className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+    >
+      <UserAvatar />
+      <div className="grid flex-1 text-left text-sm leading-tight">
+        <span className="truncate">{user.firstName}</span>
+        <span className="truncate text-xs font-normal text-sidebar-secondary">
+          {user.email}
+        </span>
+      </div>
+    </SidebarMenuButton>
   );
 }
