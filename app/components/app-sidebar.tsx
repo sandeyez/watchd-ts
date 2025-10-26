@@ -1,10 +1,11 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import {
   ClapperboardIcon,
   ClockIcon,
   HomeIcon,
   ListIcon,
   LogInIcon,
+  LogOutIcon,
   MoreHorizontal,
   SearchIcon,
   SparklesIcon,
@@ -25,11 +26,20 @@ import {
   SidebarMenuItem,
 } from "./ui/sidebar/sidebar";
 
-import type { ReactNode } from "react";
 import { useUser } from "@/hooks/use-user";
-import { UserAvatar } from "./user-avatar";
-import { useSidebar } from "./ui/sidebar/sidebar-context";
 import { cn } from "@/lib/tailwind";
+import type { ReactNode } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { useSidebar } from "./ui/sidebar/sidebar-context";
+import { UserAvatar } from "./user-avatar";
+import { authClient } from "@/lib/auth-client";
 
 type SidebarItem = {
   title: string;
@@ -188,32 +198,73 @@ export function AppSidebar() {
 function SidebarUserButton() {
   const user = useUser();
 
+  const router = useRouter();
+
   if (!user)
     return (
-      <SidebarMenuButton
-        size="lg"
-        className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-        asChild
-      >
-        <Link to="/login">
-          <LogInIcon />
-          <span>Log in</span>
-        </Link>
-      </SidebarMenuButton>
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          size="lg"
+          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+          asChild
+        >
+          <Link to="/login">
+            <LogInIcon />
+            <span>Log in</span>
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
     );
 
   return (
-    <SidebarMenuButton
-      size="lg"
-      className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-    >
-      <UserAvatar />
-      <div className="grid flex-1 text-left text-sm leading-tight">
-        <span className="truncate">{user.firstName}</span>
-        <span className="truncate text-xs font-normal text-sidebar-secondary">
-          {user.email}
-        </span>
-      </div>
-    </SidebarMenuButton>
+    <SidebarMenuItem>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <SidebarMenuButton
+            size="lg"
+            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+          >
+            <UserAvatar />
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate">{user.firstName}</span>
+              <span className="truncate text-xs font-normal text-sidebar-secondary">
+                {user.email}
+              </span>
+            </div>
+          </SidebarMenuButton>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+          align="end"
+          side="right"
+          sideOffset={4}
+        >
+          <DropdownMenuLabel className="p-0 font-normal">
+            <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+              <UserAvatar />
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold">{user.firstName}</span>
+                <span className="truncate text-xs font-normal text-sidebar-secondary">
+                  {user.email}
+                </span>
+              </div>
+            </div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() =>
+              authClient.signOut().then(({ data }) => {
+                if (!data || !data.success) return;
+
+                router.invalidate();
+              })
+            }
+          >
+            <LogOutIcon />
+            Log out
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </SidebarMenuItem>
   );
 }
