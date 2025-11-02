@@ -15,6 +15,17 @@ export const Route = createFileRoute("/_auth/login")({
 });
 
 function RouteComponent() {
+  async function handleLogin() {
+    try {
+      const result = await authClient.signIn.social({
+        provider: "google",
+      });
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <Card className="min-w-md">
       <CardHeader>
@@ -24,15 +35,7 @@ function RouteComponent() {
       <CardContent>
         <FieldGroup>
           <Field>
-            <Button
-              variant="outline"
-              type="button"
-              onClick={() => {
-                authClient.signIn.social({
-                  provider: "google",
-                });
-              }}
-            >
+            <Button variant="outline" type="button" onClick={handleLogin}>
               <img
                 src="/images/google-logo.svg"
                 alt="Google Logo"
