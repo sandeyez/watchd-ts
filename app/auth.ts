@@ -12,6 +12,14 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  logger: {
+    disabled: false,
+    disableColors: false,
+    level: "error",
+    log: (level, message, ...args) => {
+      console.log(`[${level}] ${message}`, ...args);
+    },
+  },
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID!,
