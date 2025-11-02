@@ -14,6 +14,7 @@ interface HorizontalScrollProps {
   showDots?: boolean;
   className?: string;
   scrollButtonClassName?: string;
+  disableScroll?: boolean;
 }
 
 /**
@@ -25,13 +26,14 @@ interface HorizontalScrollProps {
  * @param className - Additional CSS classes for the container
  * @param scrollButtonClassName - Additional CSS classes for the scroll buttons
  */
-function HorizontalScroll({
+function HorizontalList({
   children,
   gap = 16,
-  showScrollButtons = true,
   showDots = true,
   className = "",
   scrollButtonClassName = "",
+  disableScroll = false,
+  showScrollButtons = !disableScroll,
 }: HorizontalScrollProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -188,7 +190,7 @@ function HorizontalScroll({
         </Button>
       )}
       {/* Fade Gradients */}
-      {showScrollButtons && (
+      {showScrollButtons && !disableScroll && (
         <>
           <div
             className={`absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-background to-transparent z-[5] pointer-events-none transition-opacity duration-200 ${
@@ -206,7 +208,12 @@ function HorizontalScroll({
       <div
         ref={scrollContainerRef}
         onScroll={checkScrollButtons}
-        className="flex w-full overflow-x-auto scrollbar-hide scroll-smooth *:snap-start"
+        className={cn(
+          "flex w-full overflow-x-auto scrollbar-hide scroll-smooth *:snap-start",
+          {
+            "overflow-x-hidden": disableScroll,
+          }
+        )}
         style={{
           gap: `${gap}px`,
           scrollSnapType: "x mandatory",
@@ -218,7 +225,7 @@ function HorizontalScroll({
       >
         {childrenArray}
       </div>
-      {showDots && totalPages > 1 && (
+      {showDots && totalPages > 1 && !disableScroll && (
         <div className="flex justify-center mt-4 gap-2">
           {Array.from({ length: totalPages }).map((_, index) => (
             <button
@@ -241,4 +248,4 @@ function HorizontalScroll({
   );
 }
 
-export default HorizontalScroll;
+export default HorizontalList;

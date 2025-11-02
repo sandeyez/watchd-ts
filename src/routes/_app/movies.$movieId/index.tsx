@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import z from "zod";
 
-import HorizontalScroll from "@/components/horizontal-list";
+import HorizontalList from "@/components/horizontal-list";
 import { FixedMovieHeader } from "@/components/movie/fixed-movie-header";
 import { MovieCard } from "@/components/movie/movie-card";
 import { MovieCast } from "@/components/movie/movie-cast";
@@ -321,7 +321,7 @@ function RouteComponent() {
           <section className="space-y-3">
             <h2>More like this</h2>
             <ul className="flex gap-4 w-full [--poster-width:--spacing(36)] sm:[--poster-width:--spacing(44)] md:[--poster-width:--spacing(48)]">
-              <HorizontalScroll
+              <HorizontalList
                 key={movie.id}
                 gap={16}
                 showDots
@@ -345,7 +345,7 @@ function RouteComponent() {
                     </li>
                   )
                 )}
-              </HorizontalScroll>
+              </HorizontalList>
             </ul>
           </section>
         )}

@@ -6,10 +6,10 @@ import { StarIcon } from "lucide-react";
 import { MoviePoster } from "./movie-poster";
 
 type MovieCardProps = {
-  posterPath: string | null;
+  posterPath: string | null | undefined;
   title: string;
-  releaseDate: Date;
-  voteAverage: number;
+  releaseDate?: Date;
+  voteAverage?: number;
   className?: string;
 };
 
@@ -26,7 +26,7 @@ export function MovieCard({
     path: posterPath,
   });
 
-  const releaseYear = releaseDate.getFullYear();
+  const releaseYear = releaseDate?.getFullYear();
 
   return (
     <div className={cn("flex flex-col gap-3", className)}>
@@ -34,14 +34,18 @@ export function MovieCard({
       <div className="flex flex-col">
         <span>{title}</span>
         <div className="flex items-center gap-2 text-muted-foreground ">
-          {!Number.isNaN(releaseYear) && (
+          {releaseYear && !Number.isNaN(releaseYear) && (
             <span className="text-sm">{releaseYear}</span>
           )}
-          <div className="h-4 w-px bg-muted" />
-          <div className="flex items-center gap-1">
-            <StarIcon className="fill-yellow-300 size-4 text-transparent" />
-          </div>
-          <span className="text-sm">{voteAverage.toFixed(1)}</span>
+          <div className="h-4 w-px bg-muted first:hidden last:hidden" />
+          {voteAverage && (
+            <>
+              <div className="flex items-center gap-1">
+                <StarIcon className="fill-yellow-300 size-4 text-transparent" />
+              </div>
+              <span className="text-sm">{voteAverage.toFixed(1)}</span>
+            </>
+          )}
         </div>
       </div>
     </div>

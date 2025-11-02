@@ -110,6 +110,11 @@ function RouteComponent() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
+            ref={(el) => {
+              if (!el) return;
+
+              el.setSelectionRange(el.value.length, el.value.length);
+            }}
           />
           <div className="w-12 h-full grid place-content-center absolute left-0 top-0">
             <SearchIcon className="size-5 text-muted-foreground" />

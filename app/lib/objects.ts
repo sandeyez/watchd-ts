@@ -16,3 +16,10 @@ export function typedObjectEntries<
 >(obj: Record<TKeyType, TValueType>): Array<[TKeyType, TValueType]> {
   return Object.entries(obj) as Array<[TKeyType, TValueType]>;
 }
+
+export function typedObjectFromEntries<
+  TKeyType extends string | number,
+  TValueType,
+>(entries: Array<[TKeyType, TValueType]>): Record<TKeyType, TValueType> {
+  return Object.fromEntries(entries) as Record<TKeyType, TValueType>;
+}

@@ -28,7 +28,7 @@ function RouteComponent() {
       <SidebarProvider open={!hideSidebar}>
         <AppSidebar />
         <main
-          className="size-full flex-1 overflow-y-auto"
+          className="size-full flex-1 overflow-y-auto relative"
           id={SCROLL_CONTAINER_ID}
         >
           <Outlet />
