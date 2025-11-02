@@ -5,3 +5,5 @@
 /.tanstack
 .eslintcache
 /dist
+/.nitro
+/.output
