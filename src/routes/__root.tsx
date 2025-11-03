@@ -12,7 +12,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { NotFound } from "@/components/not-found";
 import { CountryProvider } from "@/contexts/country-context";
 import { LocalStorageConfigProvider } from "@/contexts/local-storage-context";
-import appCss from "@/styles/app.css?url";
+import styles from "@/styles/app.css?url";
 
 import { auth } from "@/auth";
 import { db } from "@/db/index.server";
@@ -79,7 +79,7 @@ export const Route = createRootRoute({
     links: [
       {
         rel: "stylesheet",
-        href: appCss,
+        href: styles,
       },
     ],
   }),
