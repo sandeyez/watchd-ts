@@ -1,4 +1,9 @@
-import { Link, createFileRoute, useRouter } from "@tanstack/react-router";
+import {
+  Link,
+  createFileRoute,
+  useLoaderData,
+  useRouter,
+} from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import {
   CalendarIcon,
@@ -25,8 +30,6 @@ import { cn, tw } from "@/lib/tailwind";
 import { getImageUrl } from "@/lib/tmdb-utils";
 import { tmdb } from "@/lib/tmdb.server";
 
-import { routeApi } from "../movies.$movieId";
-
 import { CheckInModal } from "@/components/movie/checkin-modal";
 import { MoviePoster } from "@/components/movie/movie-poster";
 import { RequireSignIn } from "@/components/require-sign-in";
@@ -35,7 +38,7 @@ import { movieReview } from "@/db/schemas/schema";
 import { authMiddleware } from "@/middleware/auth-middleware";
 import { useMutation } from "@tanstack/react-query";
 import type { CSSProperties } from "react";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 const getRecommendedMovies = createServerFn({
   method: "GET",
@@ -125,10 +128,23 @@ export const Route = createFileRoute("/_app/movies/$movieId/")({
       userReview,
     };
   },
+  head: ({
+    match: {
+      context: { movie },
+    },
+  }) => {
+    return {
+      meta: [
+        {
+          title: `${movie.title} | Watchd`,
+        },
+      ],
+    };
+  },
 });
 
 function RouteComponent() {
-  const movie = routeApi.useLoaderData();
+  const { movie } = useLoaderData({ from: "/_app/movies/$movieId" });
   const { recommendedMovies, userReview } = Route.useLoaderData();
 
   const [optimisticUserHasReview, setOptimisticUserHasReview] =
@@ -147,6 +163,76 @@ function RouteComponent() {
       setOptimisticUserHasReview(false);
     },
   });
+
+  const handleAddToWatchlist = useCallback(async () => {
+    const poster = document.querySelector("[data-poster]");
+    const target = document.querySelector("[data-watchlist]");
+
+    if (!poster || !target) return;
+
+    const posterRect = poster.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+
+    const clone = poster.cloneNode(true) as HTMLImageElement;
+    clone.style.cssText = `
+        position: fixed;
+        left: ${posterRect.left}px;
+        top: ${posterRect.top}px;
+        width: ${posterRect.width}px;
+        height: ${posterRect.height}px;
+        z-index: 9999;
+        pointer-events: none;
+        border-radius: 0.5rem;
+      `;
+
+    document.body.appendChild(clone);
+
+    const currentPoint = {
+      x: posterRect.left + 0.5 * posterRect.width + window.scrollX,
+      y: posterRect.top + 0.5 * posterRect.height + window.scrollY,
+    };
+
+    const targetPoint = {
+      x: targetRect.left + 0.5 * targetRect.width,
+      y: targetRect.top + 0.5 * targetRect.height,
+    };
+
+    const animation = clone.animate(
+      [
+        {
+          transform: "translate(0, 0) scale(1)",
+          opacity: 1,
+        },
+        {
+          transform: "translate(-75%, -75%) scale(1)",
+          opacity: 1,
+          offset: 0.25,
+        },
+        {
+          transform: `translate(${targetPoint.x - currentPoint.x}px, ${targetPoint.y - currentPoint.y}px) scale(0)`,
+          opacity: 0.5,
+        },
+      ],
+      {
+        duration: 750,
+        easing: "ease-in-out",
+      }
+    );
+
+    document.createElement("div").style.cssText = `
+        position: fixed;
+        left: ${currentPoint.x}px;
+        top: ${currentPoint.y}px;
+        width: ${posterRect.width}px;
+        height: ${posterRect.height}px;
+        z-index: 9999;
+        pointer-events: none;
+        border-radius: 0.5rem;
+      `;
+
+    await animation.finished;
+    clone.remove();
+  }, [movie.id]);
 
   const [metadataRef, metadataRect] = useBoundingClientRect<HTMLDivElement>();
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -201,7 +287,10 @@ function RouteComponent() {
             backdropSrc && "mt-16 sm:mt-[calc(max(32svh,10rem))]"
           )}
         >
-          <div className="aspect-poster row-span-full w-48 rounded-lg overflow-hidden outline-4 outline-b-0 outline-white outline-solid max-sm:m-auto">
+          <div
+            className="aspect-poster row-span-full w-48 rounded-lg overflow-hidden outline-4 outline-b-0 outline-white outline-solid max-sm:m-auto"
+            data-poster
+          >
             <MoviePoster src={posterSrc} />
           </div>
           <div
@@ -285,7 +374,7 @@ function RouteComponent() {
                 key={modalKey}
               />
               <RequireSignIn>
-                <Button variant={"ghost"}>
+                <Button variant={"ghost"} onClick={handleAddToWatchlist}>
                   <PlusIcon />
                   Add to watchlist
                 </Button>

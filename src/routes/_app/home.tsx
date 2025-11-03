@@ -1,8 +1,6 @@
-import { Await, Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
 import { GradientText } from "@/components/gradient-text";
-import HorizontalList from "@/components/horizontal-list";
-import { MovieCard } from "@/components/movie/movie-card";
 import { Page } from "@/components/page";
 import { db } from "@/db/index.server";
 import { useUser } from "@/hooks/use-user";
@@ -12,7 +10,7 @@ import { authMiddleware } from "@/middleware/auth-middleware";
 import { createServerFn } from "@tanstack/react-start";
 
 // Recommendations refresh daily on 9:00 AM UTC
-function getNextRecommendationRefresh() {
+function getNextRecommendationRefreshDate() {
   const now = new Date();
   const nextRefresh = new Date(new Date(now).setUTCHours(9, 0, 0, 0));
 
@@ -130,19 +128,17 @@ export const Route = createFileRoute("/_app/home")({
       ? getRecommendedMovies().catch(() => [])
       : Promise.resolve([]);
 
-    const nextRecommendationRefresh = getNextRecommendationRefresh();
+    const nextRecommendationRefreshDate = getNextRecommendationRefreshDate();
 
     return {
       recommendedMoviesPromise,
-      nextRecommendationRefresh,
+      nextRecommendationRefreshDate,
     };
   },
 });
 
 function RouteComponent() {
   const user = useUser();
-
-  const data = Route.useLoaderData();
 
   return (
     <Page className="space-y-8">
@@ -158,37 +154,6 @@ function RouteComponent() {
           </span>
         )}
       </h1>
-
-      <section className="space-y-3">
-        <div className="flex items-center justify-between gap-x-3">
-          <h2 className="inline-flex">Daily recommendations for you</h2>
-          <span className="text-sm text-muted-foreground"></span>
-        </div>
-        <Await
-          promise={data.recommendedMoviesPromise}
-          fallback={<div>Loading...</div>}
-        >
-          {(recommendedMovies) => (
-            <HorizontalList>
-              {recommendedMovies.map((movie) => (
-                <li key={movie.id}>
-                  <Link
-                    to="/movies/$movieId"
-                    params={{ movieId: movie.id.toString() }}
-                  >
-                    <MovieCard
-                      posterPath={movie.poster_path}
-                      releaseDate={new Date(movie.release_date)}
-                      title={movie.title}
-                      className="w-40"
-                    />
-                  </Link>
-                </li>
-              ))}
-            </HorizontalList>
-          )}
-        </Await>
-      </section>
     </Page>
   );
 }

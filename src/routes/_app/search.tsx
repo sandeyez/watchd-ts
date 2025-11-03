@@ -59,6 +59,20 @@ export const Route = createFileRoute("/_app/search")({
 
     return { popularQueries };
   },
+  head: ({
+    match: {
+      search: { q },
+    },
+  }) => ({
+    meta: [
+      {
+        title:
+          q && q.length > 0
+            ? `Search results for "${q}" | Watchd`
+            : "Search through movies, shows, actors, etc. | Watchd",
+      },
+    ],
+  }),
 });
 
 const gridContainerClassName = tw`mt-4 grid grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-x-4 gap-y-6`;

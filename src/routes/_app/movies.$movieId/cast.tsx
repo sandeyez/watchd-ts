@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useLoaderData } from "@tanstack/react-router";
 import { ArrowLeftIcon, SearchIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { z } from "zod";
@@ -9,8 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { normalizeString } from "@/lib/language";
 
-import { routeApi } from "../movies.$movieId";
-
 export const Route = createFileRoute("/_app/movies/$movieId/cast")({
   component: RouteComponent,
   validateSearch: z.object({
@@ -19,7 +17,7 @@ export const Route = createFileRoute("/_app/movies/$movieId/cast")({
 });
 
 function RouteComponent() {
-  const movie = routeApi.useLoaderData();
+  const { movie } = useLoaderData({ from: "/_app/movies/$movieId" });
 
   const [searchInput, setSearchInput] = useState("");
   const normalizedSearchInput = normalizeString(searchInput).split(" ");

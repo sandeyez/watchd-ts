@@ -45,6 +45,7 @@ type SidebarItem = {
   title: string;
   href: string;
   icon: ReactNode;
+  dataAttribute?: string;
 };
 
 type SidebarItemGroup = {
@@ -98,6 +99,7 @@ const sidebarGroups: Array<SidebarItemGroup> = [
         title: "Watchlist",
         href: "/watchlist",
         icon: <ListIcon />,
+        dataAttribute: "watchlist",
       },
     ],
   },
@@ -148,9 +150,12 @@ export function AppSidebar() {
           </Link>
         </div>
         <SidebarMenu>
-          {mainItems.map(({ href, icon, title }) => (
+          {mainItems.map(({ href, icon, title, dataAttribute }) => (
             <SidebarMenuItem key={title}>
-              <SidebarMenuButton asChild>
+              <SidebarMenuButton
+                asChild
+                {...(dataAttribute ? { [`data-${dataAttribute}`]: true } : {})}
+              >
                 <Link to={href}>
                   {icon}
                   <span>{title}</span>
@@ -166,9 +171,14 @@ export function AppSidebar() {
             <SidebarGroupLabel>Favorites</SidebarGroupLabel>
 
             <SidebarMenu>
-              {items.map(({ title: itemTitle, href, icon }) => (
+              {items.map(({ title: itemTitle, href, icon, dataAttribute }) => (
                 <SidebarMenuItem key={itemTitle}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton
+                    asChild
+                    {...(dataAttribute
+                      ? { [`data-${dataAttribute}`]: true }
+                      : {})}
+                  >
                     <Link to={href} title={itemTitle}>
                       {icon}
                       <span>{itemTitle}</span>

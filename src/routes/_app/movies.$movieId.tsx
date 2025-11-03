@@ -1,4 +1,4 @@
-import { Outlet, createFileRoute, getRouteApi } from "@tanstack/react-router";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
@@ -25,7 +25,7 @@ export const getMovieDetails = createServerFn({
 
 export const Route = createFileRoute("/_app/movies/$movieId")({
   component: RouteComponent,
-  loader: async ({ params }) => {
+  beforeLoad: async ({ params }) => {
     const { movieId: movieIdAsString } = params;
 
     const movieId = Number(movieIdAsString);
@@ -34,18 +34,23 @@ export const Route = createFileRoute("/_app/movies/$movieId")({
       throw new Error("Invalid movieId");
     }
 
-    const details = await getMovieDetails({
+    const movie = await getMovieDetails({
       data: { movieId: Number(movieId) },
     });
 
-    return details;
+    return { movie };
+  },
+  loader: ({ context }) => {
+    const { movie } = context;
+
+    return {
+      movie,
+    };
   },
   staticData: {
     hideSidebar: true,
   },
 });
-
-export const routeApi = getRouteApi("/_app/movies/$movieId");
 
 function RouteComponent() {
   return <Outlet />;
